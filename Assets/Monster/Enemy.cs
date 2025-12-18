@@ -12,8 +12,12 @@ public class Enemy : MonoBehaviour
     public float timer;
     public bool isAttacking = false;
 
-    public Transform castle;
     public Animator animator;
+
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void Start()
     {
@@ -36,9 +40,9 @@ public class Enemy : MonoBehaviour
     {
         if (health <= 0) return;
         animator.Play(KeyAnimator.walk);
-        float distance = Vector3.Distance(transform.position, castle.position);
+        float distance = Vector3.Distance(transform.position, Castle.Instance.door.position);
         float duration = distance / speedMove;
-        transform.DOMove(castle.position, duration).SetEase(Ease.Linear);
+        transform.DOMove(Castle.Instance.door.position, duration).SetEase(Ease.Linear);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -74,7 +78,7 @@ public class Enemy : MonoBehaviour
     
     void Die()
     {
-        CancelInvoke(nameof(DealDamage));
+        Progess1.Instance.aliveEnemies.Remove(this);
         transform.DOKill();
         animator.Play(KeyAnimator.die);
         Destroy(gameObject, 0.5f);

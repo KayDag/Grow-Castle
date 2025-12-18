@@ -6,8 +6,11 @@ public class Defender : MonoBehaviour
 {
     public GameObject ball;
     public Transform power;
-    [SerializeField] float timer = 0;
-    [SerializeField] int cooldown = 1;
+    public Animator animator;
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -17,15 +20,14 @@ public class Defender : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        if (timer >= cooldown)
-        {
-            Fire();
-            timer = 0f;
-        }
+        Fire();
     }
     void Fire()
     {
-        Instantiate(ball, power.position, power.rotation);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.Play(KeyAnimator.attack);
+            Instantiate(ball, power.position, power.rotation);
+        }
     }
 }

@@ -1,46 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class Power : MonoBehaviour
 {
     public int dmg = 2;
-    public float speedMove = 5;
-    // Start is called before the first frame update
+    public float speedMove = 5f;
+
+    Transform target;
+
     void Start()
     {
-        
+        SetTarget();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        Move();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        Enemy enemy = collision.GetComponent<Enemy>();
         if (enemy != null)
         {
-            enemy.health -= dmg;
+            enemy.TakeDamage(dmg);
             Destroy(gameObject);
         }
     }
-    public Transform target;
-
-    public void SetTarget(Transform t)
+    void SetTarget()
     {
-        target = t;
-        Move(); 
-    }
+        float minDist = float.MaxValue;
+        Enemy closest = null;
 
+        foreach (var e in Progess1.Instance.aliveEnemies)
+        {
+            if (e == null) continue;
+
+            float d = Vector3.Distance(transform.position, e.transform.position);
+            if (d < minDist)
+            {
+                minDist = d;
+                closest = e;
+            }
+        }
+
+        if (closest != null)
+            target = closest.transform;
+    }
     void Move()
     {
-        if (target == null) return;
-        float distance = Vector3.Distance(transform.position, target.position);
-        float duration = distance / speedMove;
-        transform.DOMove(target.position, duration).SetEase(Ease.Linear).SetTarget(target);
+        if (target == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        transform.position = Vector3.MoveTowards(transform.position, target.position, speedMove * Time.deltaTime);
     }
-
 }

@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ball: {fileID: 2879700596357652052, guid: 699a44ac8d721b24588a9dac1e1afec5, type: 3}
-  power: {fileID: 0}
+  power: {fileID: 4633959970495141425}
   timer: 0
   cooldown: 1
 --- !u!1 &8079480538791722532

@@ -7,6 +7,7 @@ public class Castle : MonoBehaviour
 {
     public static Castle Instance;
     public int health = 50;
+    public Transform door;
 
     private void Awake()
     {
