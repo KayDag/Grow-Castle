@@ -41,4 +41,13 @@ public class Progess1 : MonoBehaviour
             delta += distance;
         }
     }
+    public bool Done()
+    {
+        if (aliveEnemies == null || aliveEnemies.Count == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

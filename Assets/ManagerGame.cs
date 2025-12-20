@@ -14,6 +14,9 @@ public class ManagerGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Castle.Instance.health > 0 && Progess1.Instance.Done() == true)
+        {
+            Progess1.Instance.SpawnEnemies();
+        }
     }
 }
