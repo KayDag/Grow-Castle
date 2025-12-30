@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public class ManagerGame : MonoBehaviour
+public class PlayerStatsManager : MonoBehaviour
 {
-    public static ManagerGame Instance;
+    public static PlayerStatsManager Instance;
+
+    public float damageDefender;
+    public float damageAttacker;
+    public float speedAttacker;
+    public float healthCastle;
+    public float cooldownBooster;
+    public float morale;
+
 
     private void Awake()
     {
@@ -21,15 +28,12 @@ public class ManagerGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Progess1.Instance.SpawnEnemies();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Castle.Instance.health > 0 && Progess1.Instance.Done() == true)
-        {
-            Progess1.Instance.SpawnEnemies();
-        }
+        
     }
 }
