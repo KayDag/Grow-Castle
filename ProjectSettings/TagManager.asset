@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Castle
+  - Monster
+  - CheckPoint
+  - Attacker
   layers:
   - Default
   - TransparentFX

@@ -7,80 +7,118 @@ public class Enemy : MonoBehaviour
 {
     public int damage = 10;
     public int health = 10;
-    public float speedMove = 5f;
-    public float cooldown = 1f;
-    public float timer;
-    public bool isAttacking = false;
+    public float speedMove = 3f;
+    public float cooldown = 3f;
 
-    public Animator animator;
+    private float timer = 0;
+    private bool isAttackingCastle;
+    private bool isAttackingAttacker;
+
+    private Attacker targetAttacker;
+    private Animator animator;
 
     void Awake()
     {
         animator = GetComponent<Animator>();
     }
 
-    void Start()
+    void Update()
     {
         Move();
+        HandleAttack();
     }
 
-    private void Update()
-    {
-        if (isAttacking)
-        {
-            timer += Time.deltaTime;
-            if (timer >= cooldown)
-            {
-                Attack();
-                timer = 0;
-            }
-        }
-    }
     void Move()
     {
         if (health <= 0) return;
-        animator.Play(KeyAnimator.walk);
-        float distance = Vector3.Distance(transform.position, Castle.Instance.door.position);
-        float duration = distance / speedMove;
-        transform.DOMove(Castle.Instance.door.position, duration).SetEase(Ease.Linear);
+        if (isAttackingCastle || isAttackingAttacker) return;
+
+        PlayAnim(KeyAnimator.walk);
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            Castle.Instance.door.position,
+            speedMove * Time.deltaTime
+        );
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void HandleAttack()
     {
-        if (other.CompareTag("Castle") && !isAttacking)
+        if (!isAttackingCastle && !isAttackingAttacker) return;
+
+        timer += Time.deltaTime;
+        if (timer >= cooldown)
         {
-            isAttacking = true;
             Attack();
-            transform.DOKill(); 
+            timer = 0f;
         }
     }
 
     void Attack()
     {
-        animator.Play(KeyAnimator.attack);
-        DealDamage();
+        PlayAnim(KeyAnimator.attack);
+
+        if (isAttackingCastle)
+        {
+            Castle.Instance.TakeDamage(damage);
+            Castle.Instance.CheckLose();
+        }
+        else if (isAttackingAttacker && targetAttacker != null)
+        {
+            targetAttacker.TakeDamage(damage, this);
+        }
     }
-    void DealDamage()
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Castle castle = Castle.Instance;
-        castle.TakeDamage(damage);
-        castle.CheckLose();
+        timer = cooldown;
+        if (other.CompareTag("Castle"))
+        {
+            isAttackingCastle = true;
+        }
+        else if (other.CompareTag("Attacker"))
+        {
+            isAttackingAttacker = true;
+            targetAttacker = other.GetComponent<Attacker>();
+        }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Castle"))
+        {
+            isAttackingCastle = false;
+        }
+        else if (other.CompareTag("Attacker"))
+        {
+            StopAttackAttacker();
+        }
+    }
+
+    public void StopAttackAttacker()
+    {
+        isAttackingAttacker = false;
+        targetAttacker = null;
+    }
+
     public void TakeDamage(int amount)
     {
         if (health <= 0) return;
+
         health -= amount;
         if (health <= 0)
-        {
             Die();
-        }
     }
-    
+
     void Die()
     {
-        Progess1.Instance.aliveEnemies.Remove(this);
-        transform.DOKill();
-        animator.Play(KeyAnimator.die);
+        PlayAnim(KeyAnimator.die);
         Destroy(gameObject, 0.5f);
+    }
+
+    void PlayAnim(string anim)
+    {
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(anim))
+            animator.Play(anim);
     }
 }
