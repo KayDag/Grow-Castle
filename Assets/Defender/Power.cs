@@ -48,9 +48,14 @@ public class Power : MonoBehaviour
     }
     void Move()
     {
+        Vector3 center = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Mathf.Abs(Camera.main.transform.position.z)));
         if (target == null)
         {
-            Destroy(gameObject);
+            transform.position = Vector3.MoveTowards(transform.position,center,speedMove * Time.deltaTime);
+            if (Vector3.Distance(transform.position, center) < 0.1f)
+            {
+                Destroy(gameObject);
+            }
             return;
         }
         transform.position = Vector3.MoveTowards(transform.position, target.position, speedMove * Time.deltaTime);

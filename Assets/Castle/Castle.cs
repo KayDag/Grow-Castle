@@ -6,7 +6,8 @@ using UnityEngine;
 public class Castle : MonoBehaviour
 {
     public static Castle Instance;
-    public int health = 50;
+    public float health = 50;
+    public float healthStay = 50;
     public Transform door;
 
     private void Awake()

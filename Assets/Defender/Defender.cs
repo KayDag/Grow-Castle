@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Defender : MonoBehaviour
 {
     public GameObject ball;
     public Transform power;
+
     public Animator animator;
     private void Awake()
     {
@@ -20,14 +23,11 @@ public class Defender : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Fire();
+
     }
-    void Fire()
+    public void Fire()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
             animator.Play(KeyAnimator.attack);
             Instantiate(ball, power.position, power.rotation);
-        }
     }
 }
