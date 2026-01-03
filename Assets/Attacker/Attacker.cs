@@ -14,6 +14,8 @@ public class Attacker : MonoBehaviour
     private Vector3 checkPoint;
     private bool isAttacking = false;
     private Enemy enemy;
+
+    private bool reachedCheckpoint = false;
     private Animator animator;
 
     void Awake()
@@ -43,7 +45,6 @@ public class Attacker : MonoBehaviour
     void Move()
     {
         PlayAnim(KeyAnimator.walk);
-
         transform.position = Vector3.MoveTowards(
             transform.position,
             checkPoint,
@@ -99,6 +100,7 @@ public class Attacker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (reachedCheckpoint) return;
         timer = cooldown;
         if (other.CompareTag("Monster"))
         {
@@ -107,7 +109,11 @@ public class Attacker : MonoBehaviour
         }
         else if (other.CompareTag("CheckPoint"))
         {
-            Destroy(gameObject);
+            reachedCheckpoint = true;
+            ManagerGame.Instance.countWave += 1;
+            ManagerGame.Instance.progress.text = (ManagerGame.Instance.countWave - 1).ToString()
+                + "/" + ManagerGame.Instance.checkPointWave[(int)ManagerGame.Instance.wave].ToString();
+            Destroy(gameObject, 0.01f);
         }
     }
 }

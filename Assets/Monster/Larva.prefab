@@ -200,10 +200,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6db3d9d53e3dd64082657b0cc42a723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 5
   health: 10
-  speedMove: 2
-  cooldown: 3
+  speedMove: 1
+  cooldown: 2
 --- !u!1 &544951515856126510
 GameObject:
   m_ObjectHideFlags: 0

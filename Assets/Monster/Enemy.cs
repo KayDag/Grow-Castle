@@ -10,25 +10,25 @@ public class Enemy : MonoBehaviour
     public float speedMove = 3f;
     public float cooldown = 3f;
 
-    private float timer = 0;
-    private bool isAttackingCastle;
-    private bool isAttackingAttacker;
+    protected float timer = 0;
+    protected bool isAttackingCastle;
+    protected bool isAttackingAttacker;
 
-    private Attacker targetAttacker;
-    private Animator animator;
+    protected Attacker targetAttacker;
+    protected Animator animator;
 
-    void Awake()
+    protected void Awake()
     {
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    protected void Update()
     {
         Move();
         HandleAttack();
     }
 
-    void Move()
+    protected void Move()
     {
         if (health <= 0) return;
         if (isAttackingCastle || isAttackingAttacker) return;
@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
         );
     }
 
-    void HandleAttack()
+    protected void HandleAttack()
     {
         if (!isAttackingCastle && !isAttackingAttacker) return;
 
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Attack()
+    protected virtual void Attack()
     {
         PlayAnim(KeyAnimator.attack);
 
@@ -110,13 +110,13 @@ public class Enemy : MonoBehaviour
             Die();
     }
 
-    void Die()
+    protected void Die()
     {
         PlayAnim(KeyAnimator.die);
         Destroy(gameObject, 0.5f);
     }
 
-    void PlayAnim(string anim)
+    protected void PlayAnim(string anim)
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName(anim))
             animator.Play(anim);

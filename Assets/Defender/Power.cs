@@ -31,7 +31,7 @@ public class Power : MonoBehaviour
         float minDist = float.MaxValue;
         Enemy closest = null;
 
-        foreach (var e in Progess1.Instance.aliveEnemies)
+        foreach (var e in ManagerGame.Instance.aliveEnemies)
         {
             if (e == null) continue;
 

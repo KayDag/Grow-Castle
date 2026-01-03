@@ -1,53 +1,88 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Progess1 : MonoBehaviour
 {
     public static Progess1 Instance;
-    public List<GameObject> enemies;
-    public List<Enemy> aliveEnemies = new List<Enemy>();
+
+    public GameObject enemy;
+    public int spawnEnemy = 10;
+
     public Transform pointA, pointB;
+
+    public float spawnInterval = 2f;          
+    public int spawnPerTime = 2;             
+
+    private int spawnIndex = 0;
+    private Coroutine spawnCoroutine;
 
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
-        else Destroy(gameObject);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        else
+            Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartWave()
     {
-        
+        // tránh gọi spawn nhiều lần
+        if (spawnCoroutine != null) return;
+
+        spawnIndex = 0;
+        spawnCoroutine = StartCoroutine(SpawnWave());
     }
-    public void SpawnEnemies()
+
+    IEnumerator SpawnWave()
     {
-        float distance = Mathf.Abs(pointA.position.y - pointB.position.y) / enemies.Count;
         float x = pointA.position.x;
-        float y = pointB.position.y;
-        float delta = 0;
-        foreach (var e in enemies)
+        float yMin = pointA.position.y;
+        float yMax = pointB.position.y;
+
+        while (spawnIndex < spawnEnemy)
         {
-            GameObject enemy = Instantiate(e, new Vector3(x, y + delta, 0f), Quaternion.identity);
-            aliveEnemies.Add(enemy.GetComponent<Enemy>());
-            delta += distance;
+            // tạo list chứa Y cho mỗi con trong lần spawn
+            List<float> spawnYs = new List<float>();
+
+            for (int i = 0; i < spawnPerTime; i++)
+            {
+                if (spawnIndex + i >= spawnEnemy) break;
+
+                // chia đều đoạn và random trong phần nhỏ
+                float segmentHeight = (yMax - yMin) / spawnPerTime;
+                float y = yMin + segmentHeight * i + Random.Range(0f, segmentHeight);
+
+                spawnYs.Add(y);
+            }
+
+            // spawn từng con
+            for (int i = 0; i < spawnYs.Count; i++)
+            {
+                GameObject enemy1 = Instantiate(enemy, new Vector3(x, spawnYs[i], 0f), Quaternion.identity);
+
+                Enemy enemyComp = enemy1.GetComponent<Enemy>();
+                if (enemyComp != null)
+                    ManagerGame.Instance.aliveEnemies.Add(enemyComp);
+
+                spawnIndex++;
+            }
+
+            yield return new WaitForSeconds(spawnInterval);
         }
+
+        spawnCoroutine = null;
     }
+
+    public void RemoveEnemy(Enemy enemy)
+    {
+        if (ManagerGame.Instance.aliveEnemies.Contains(enemy))
+            ManagerGame.Instance.aliveEnemies.Remove(enemy);
+    }
+
     public bool Done()
     {
-        if (aliveEnemies == null || aliveEnemies.Count == 0)
-        {
-            return true;
-        }
-        return false;
+        return spawnIndex >=spawnEnemy && ManagerGame.Instance.aliveEnemies.Count == 0;
     }
 
 }
