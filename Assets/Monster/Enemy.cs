@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public int health = 10;
     public float speedMove = 3f;
     public float cooldown = 3f;
+    public int goldDrop = 5;
 
     protected float timer = 0;
     protected bool isAttackingCastle;
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
 
     protected void Update()
     {
+        if (!ManagerGame.Instance.isGame) return;
         Move();
         HandleAttack();
     }
@@ -113,6 +115,8 @@ public class Enemy : MonoBehaviour
     protected void Die()
     {
         PlayAnim(KeyAnimator.die);
+        if (Progess1.Instance != null)
+            Progess1.Instance.RemoveEnemy(this);
         Destroy(gameObject, 0.5f);
     }
 

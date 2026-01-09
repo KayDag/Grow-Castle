@@ -14,8 +14,8 @@ public class Progress3 : MonoBehaviour
 
     public Transform pointA, pointB;
 
-    private int enemySpawned = 0;
-    private int enemy1Spawned = 0;
+    private int spawnIndex = 0;
+    private int spawnIndex1 = 0;
     private Coroutine spawnCoroutine;
 
     private void Awake()
@@ -45,7 +45,7 @@ public class Progress3 : MonoBehaviour
         for (int wave = 0; wave < totalWaves; wave++)
         {
             // Spawn 1 enemy1 nếu còn
-            if (enemy1Spawned < spawnEnemy1)
+            if (spawnIndex1 < spawnEnemy1)
             {
                 float y1 = Random.Range(yMin, yMax);
                 GameObject e1 = Instantiate(enemy1, new Vector3(x, y1, 0f), Quaternion.identity);
@@ -54,13 +54,13 @@ public class Progress3 : MonoBehaviour
                 if (e1Comp != null)
                     ManagerGame.Instance.aliveEnemies.Add(e1Comp);
 
-                enemy1Spawned++;
+                spawnIndex1++;
             }
 
             // Spawn 2 enemy thường nếu còn
             for (int i = 0; i < 2; i++)
             {
-                if (enemySpawned >= spawnEnemy) break;
+                if (spawnIndex >= spawnEnemy) break;
 
                 float y = Random.Range(yMin, yMax);
                 GameObject e = Instantiate(enemy, new Vector3(x, y, 0f), Quaternion.identity);
@@ -69,13 +69,23 @@ public class Progress3 : MonoBehaviour
                 if (eComp != null)
                     ManagerGame.Instance.aliveEnemies.Add(eComp);
 
-                enemySpawned++;
+                spawnIndex++;
             }
 
             // Delay giữa các đợt
             yield return new WaitForSeconds(4f);
         }
 
+        spawnCoroutine = null;
+    }
+    public bool IsDone()
+    {
+        return (spawnIndex >= spawnEnemy && spawnIndex1 >= spawnEnemy1 && ManagerGame.Instance.aliveEnemies.Count == 0);
+    }
+    public void ResetWave()
+    {
+        spawnIndex = 0;
+        spawnIndex1 = 0;
         spawnCoroutine = null;
     }
 }

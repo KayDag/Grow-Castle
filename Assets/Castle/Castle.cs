@@ -7,7 +7,9 @@ public class Castle : MonoBehaviour
 {
     public static Castle Instance;
     public float health = 50;
-    public float healthStay = 50;
+    public float baseHealth = 50;
+    public float stayHealth = 50;
+
     public Transform door;
 
     private void Awake()
@@ -42,7 +44,7 @@ public class Castle : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("Lose game");
-            Time.timeScale = 0;
+            ManagerGame.Instance.isLose = true;
         }
     }
 }

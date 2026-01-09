@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Progess1 : MonoBehaviour
+public class Progess1 : MonoBehaviour, IProgress
 {
     public static Progess1 Instance;
 
     public GameObject enemy;
-    public int spawnEnemy = 10;
+    public int spawnEnemy = 5;
 
     public Transform pointA, pointB;
 
@@ -80,9 +80,14 @@ public class Progess1 : MonoBehaviour
             ManagerGame.Instance.aliveEnemies.Remove(enemy);
     }
 
-    public bool Done()
+    public bool IsDone()
     {
-        return spawnIndex >=spawnEnemy && ManagerGame.Instance.aliveEnemies.Count == 0;
+        return (spawnIndex >= spawnEnemy && ManagerGame.Instance.aliveEnemies.Count == 0);
+    }
+    public void ResetWave()
+    {
+        spawnIndex = 0;
+        spawnCoroutine = null;
     }
 
 }

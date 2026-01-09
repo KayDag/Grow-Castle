@@ -28,6 +28,10 @@ public class Defender : MonoBehaviour
     public void Fire()
     {
             animator.Play(KeyAnimator.attack);
-            Instantiate(ball, power.position, power.rotation);
+        GameObject b = Instantiate(ball, power.position, power.rotation);
+
+        Power p = b.GetComponent<Power>();
+        if (p != null)
+            p.ApplyStats(ManagerGame.Instance.stats);
     }
 }

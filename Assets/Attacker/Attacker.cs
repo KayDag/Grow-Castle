@@ -1,13 +1,17 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Attacker : MonoBehaviour
 {
-    public int damage = 10;
-    public int health = 20;
+    public float damage = 10;
+    public float baseDamage = 10;
+    public float health = 20;
+    public float baseHealth = 20;
     public float speed = 2f;
+    public float baseSpeed = 2f;
     public float cooldown = 1f;
 
     private float timer;
@@ -18,9 +22,12 @@ public class Attacker : MonoBehaviour
     private bool reachedCheckpoint = false;
     private Animator animator;
 
+    private int index = -1;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
+        ApplyStats(ManagerGame.Instance.stats);
     }
 
     void Start()
@@ -30,6 +37,7 @@ public class Attacker : MonoBehaviour
 
     void Update()
     {
+        if (!ManagerGame.Instance.isGame) return;
         if (health <= 0) return;
 
         if (isAttacking && enemy != null)
@@ -58,7 +66,7 @@ public class Attacker : MonoBehaviour
         if (timer >= cooldown)
         {
             PlayAnim(KeyAnimator.attack);
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage((int)damage);
             timer = 0f;
         }
     }
@@ -89,6 +97,10 @@ public class Attacker : MonoBehaviour
     void Die()
     {
         PlayAnim(KeyAnimator.die);
+
+        if (AttackerManager.Instance != null)
+            AttackerManager.Instance.UnRegister(this);
+
         Destroy(gameObject, 0.5f);
     }
 
@@ -109,11 +121,42 @@ public class Attacker : MonoBehaviour
         }
         else if (other.CompareTag("CheckPoint"))
         {
-            reachedCheckpoint = true;
-            ManagerGame.Instance.countWave += 1;
-            ManagerGame.Instance.progress.text = (ManagerGame.Instance.countWave - 1).ToString()
-                + "/" + ManagerGame.Instance.checkPointWave[(int)ManagerGame.Instance.wave].ToString();
-            Destroy(gameObject, 0.01f);
+            ReachCheckpoint();
         }
     }
+    void ReachCheckpoint()
+    {
+        if (reachedCheckpoint) return;
+
+        reachedCheckpoint = true;
+        isAttacking = false;
+        enemy = null;
+
+        ManagerGame.Instance.OnAttackerReachCheckpoint(this);
+
+        gameObject.SetActive(false);
+    }
+    public void SetIndex(int i)
+    {
+        index = i;
+    }
+    public int GetIndex()
+    {
+        return index;
+    }
+    public void ResetState()
+    {
+        reachedCheckpoint = false;
+        isAttacking = false;
+        enemy = null;
+        health = baseHealth; 
+        checkPoint = GetRandomCheckPoint();
+    }
+    public void ApplyStats(PlayerStatsManager stats)
+    {
+        damage = baseDamage * (float)(1 + (stats.attacker - 1) * 0.15) ;
+        speed = baseSpeed * (float)(1 + (stats.attacker - 1) * 0.3);
+        health = baseHealth * (float)(1 + (stats.attacker - 1) * 0.25);
+    }
+
 }

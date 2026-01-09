@@ -1,12 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DefenderManager : MonoBehaviour
 {
-    public List<Defender> defenders;
+    public static DefenderManager Instance;
+    public List<Defender> defenders = new List<Defender>();
+    public List<Transform> point;            // danh sách điểm spawn
+    private List<bool> check = new List<bool>(); // theo dõi điểm đã spawn chưa 
+    public Defender def;
 
+    public int baseGold;
 
     public float cooldown;
     public float timerCooldown;
@@ -26,11 +32,30 @@ public class DefenderManager : MonoBehaviour
     private Color colorButton;
     private Color colorBooster;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
     private void Start()
     {
-        timerCooldown = 0;
         timerCooldown = cooldown;
         isBooster = true;
+        baseGold = 35;
+
+        for (int i = 0; i < point.Count; i++)
+        {
+            check.Add(false);
+        }
+        Defender newDef = Instantiate(def, point[0].position, Quaternion.identity);
+        defenders.Add(newDef);
+        check[0] = true;
     }
 
     public void Update()
@@ -50,6 +75,7 @@ public class DefenderManager : MonoBehaviour
             {
                 isUseBooster = false;
                 isBooster = false;
+                timerCooldown = 0f;
             }
         }
 
@@ -106,5 +132,29 @@ public class DefenderManager : MonoBehaviour
             imageBooster.color = colorBooster;
         }
     }
+    public void BuyBomber()
+    {
+        int gold = baseGold + ((int)ManagerGame.Instance.stats.defender - 1) * 5;
+        if (ManagerGame.Instance.stats.gold >= gold && def != null)
+        {
+            for (int i = 0; i < point.Count; i++)
+            {
+                if (!check[i] && point[i] != null)
+                {
+                    // instantiate tại vị trí point[i]
+                    Defender newDef = Instantiate(def, point[i].position, Quaternion.identity);
+                    defenders.Add(newDef);
 
+                    // đánh dấu đã spawn 
+                    check[i] = true;
+                    ManagerGame.Instance.stats.gold -= gold;
+                    return;
+                }
+            }
+        }
+    }
+    public bool FullDefender()
+    {
+        return (point.Count == defenders.Count);
+    }
 }

@@ -38,4 +38,11 @@ public class Progress5 : MonoBehaviour
         }
         yield return null;
     }
+    public bool IsDone()
+    {
+        return false;
+    }
+    public void ResetWave()
+    {
+    }
 }

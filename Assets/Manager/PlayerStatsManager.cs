@@ -5,20 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerStatsManager
 {
-    public float damageDefender;
-    public float speedAttacker;
-    public float healthCastle;
-    public float cooldownBooster;
+    public float defender;
+    public float attacker;
+    public float castle;
+    public float booster;
     public float gold;
 
     public PlayerStatsManager Clone()
     {
         return new PlayerStatsManager
         {
-            damageDefender = damageDefender,
-            speedAttacker = speedAttacker,
-            healthCastle = healthCastle,
-            cooldownBooster = cooldownBooster,
+            defender = defender,
+            attacker = attacker,
+            castle = castle,
+            booster = booster,
             gold = gold
         };
     }

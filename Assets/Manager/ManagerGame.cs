@@ -10,16 +10,17 @@ public class ManagerGame : MonoBehaviour
 
     public PlayerStatsManager stats;
 
-    public List<int> checkPointWave = new List<int>() { 1, 3, 6, 10, 15};
-    public int countWave;
-    private List<bool> isWave = new List<bool>() { false, false, false, false, false };
-    public float wave = 0;
-    public List<Enemy> aliveEnemies = new List<Enemy>();
+    public List<MonoBehaviour> waveObjects;
+    private List<IProgress> waves = new List<IProgress>();
+    public int currentWave = 0;
 
-    public TextMeshProUGUI progress;
+    public List<int> checkPoint = new List<int>() { 3, 4, 5, 7, 9, 12, 15 };
+    public int count = 0;
 
     public bool isGame = false;
+    public List<Enemy> aliveEnemies;
 
+    public bool isLose = false;
     private void Awake()
     {
         if (Instance == null)
@@ -30,24 +31,71 @@ public class ManagerGame : MonoBehaviour
         {
             Destroy(this);
         }
+
+        foreach (var w in waveObjects)
+        {
+            IProgress p = w as IProgress;
+            if (p != null)
+                waves.Add(p);
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
         stats = new PlayerStatsManager();
-        stats.healthCastle = 1;
-        stats.speedAttacker = 1;
-        stats.damageDefender = 1;
-        stats.cooldownBooster = 1;
+        stats.castle = 1;
+        stats.attacker = 1;
+        stats.defender = 1;
+        stats.booster = 1;
         stats.gold = 50;
 
-        wave = 0;
-        Progress4.Instance.StartWave();
+        currentWave = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isGame) return;
+        if (currentWave >= waves.Count) return;
 
+        waves[currentWave].StartWave();
+
+        if (waves[currentWave].IsDone())
+        {
+            isGame = false;
+            CheckWave();
+        }
+        if (isLose)
+        {
+            UIManager.Instance.LoseGame();
+            aliveEnemies.Clear();
+        }
+    }
+    public void CheckWave()
+    {
+        if (currentWave >= checkPoint.Count)
+            return;
+
+        if (count >= checkPoint[currentWave])
+        {
+            UIManager.Instance.WinGame();
+            currentWave++;
+            count = 0;
+        }
+        else
+        {
+            UIManager.Instance.LoseGame();
+        }
+    }
+    public void UpdateStats()
+    {
+        Castle.Instance.health += Castle.Instance.baseHealth * (int)(1 + (stats.castle - 1) * 0.25);
+        Castle.Instance.stayHealth = Castle.Instance.health;
+        AttackerManager.Instance.ApplyStatsAll(ManagerGame.Instance.stats);
+    }
+    public void OnAttackerReachCheckpoint(Attacker att)
+    {
+        count++;
+        UIManager.Instance.CheckPoint();
     }
 }

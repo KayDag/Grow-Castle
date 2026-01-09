@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Progress2 : MonoBehaviour
+public class Progress2 : MonoBehaviour, IProgress
 {
     public static Progress2 Instance;
 
@@ -14,8 +14,8 @@ public class Progress2 : MonoBehaviour
 
     public Transform pointA, pointB;
 
-    private int enemySpawned = 0;
-    private int enemy1Spawned = 0;
+    private int spawnIndex = 0;
+    private int spawnIndex1 = 0;
     private Coroutine spawnCoroutine;
 
     private void Awake()
@@ -39,10 +39,10 @@ public class Progress2 : MonoBehaviour
         float yMax = pointB.position.y;
 
         // lặp cho đến khi spawn hết enemy1 và enemy
-        while (enemy1Spawned < spawnEnemy1 || enemySpawned < spawnEnemy)
+        while (spawnIndex1 < spawnEnemy1 || spawnIndex < spawnEnemy)
         {
             // Spawn 1 enemy1 nếu chưa đủ
-            if (enemy1Spawned < spawnEnemy1)
+            if (spawnIndex1 < spawnEnemy1)
             {
                 float y1 = Random.Range(yMin, yMax);
                 GameObject e1 = Instantiate(enemy1, new Vector3(x, y1, 0f), Quaternion.identity);
@@ -50,13 +50,13 @@ public class Progress2 : MonoBehaviour
                 Enemy e1Comp = e1.GetComponent<Enemy>();
                 if (e1Comp != null)
                     ManagerGame.Instance.aliveEnemies.Add(e1Comp);
-                enemy1Spawned++;
+                spawnIndex1++;
             }
 
             yield return new WaitForSeconds(2f); // delay 1s sau enemy1
 
             // Spawn 3 enemy thường nếu còn
-            int spawnCount = Mathf.Min(3, spawnEnemy - enemySpawned);
+            int spawnCount = Mathf.Min(3, spawnEnemy - spawnIndex);
             for (int i = 0; i < spawnCount; i++)
             {
                 float y = Random.Range(yMin, yMax);
@@ -65,12 +65,22 @@ public class Progress2 : MonoBehaviour
                 Enemy eComp = e.GetComponent<Enemy>();
                 if (eComp != null)
                     ManagerGame.Instance.aliveEnemies.Add(eComp);
-                enemySpawned++;
+                spawnIndex++;
             }
 
             yield return new WaitForSeconds(3f); // delay 1.5s sau 3 enemy
         }
 
+        spawnCoroutine = null;
+    }
+    public bool IsDone()
+    {
+        return (spawnIndex >= spawnEnemy && spawnIndex1 >= spawnEnemy1 && ManagerGame.Instance.aliveEnemies.Count == 0);
+    }
+    public void ResetWave()
+    {
+        spawnIndex = 0;
+        spawnIndex1 = 0;
         spawnCoroutine = null;
     }
 }
