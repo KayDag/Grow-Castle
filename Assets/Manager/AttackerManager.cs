@@ -41,6 +41,7 @@ public class AttackerManager : MonoBehaviour
             Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
             newAtt.SetIndex(i);
             Register(newAtt, i);
+            ManagerGame.Instance.aliveScouts++;
         }
         UIManager.Instance.Scouts();
     }
@@ -62,7 +63,7 @@ public class AttackerManager : MonoBehaviour
                     Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
                     newAtt.SetIndex(i);
                     Register(newAtt, i);
-
+                    ManagerGame.Instance.aliveScouts++;
                     ManagerGame.Instance.stats.gold -= gold;
                     return;
                 }
@@ -83,6 +84,7 @@ public class AttackerManager : MonoBehaviour
             check[slot] = false;
 
         attacker.Remove(att);
+        ManagerGame.Instance.aliveScouts--;
     }
     public void NewWave()
     {

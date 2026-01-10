@@ -131,9 +131,8 @@ public class Attacker : MonoBehaviour
         reachedCheckpoint = true;
         isAttacking = false;
         enemy = null;
-
         ManagerGame.Instance.OnAttackerReachCheckpoint(this);
-
+        AttackerManager.Instance.MarkReturnHome(this);
         gameObject.SetActive(false);
     }
     public void SetIndex(int i)

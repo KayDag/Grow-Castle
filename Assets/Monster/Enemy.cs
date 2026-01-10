@@ -117,6 +117,7 @@ public class Enemy : MonoBehaviour
         PlayAnim(KeyAnimator.die);
         if (Progess1.Instance != null)
             Progess1.Instance.RemoveEnemy(this);
+        ManagerGame.Instance.stats.gold += goldDrop;
         Destroy(gameObject, 0.5f);
     }
 

@@ -42,11 +42,12 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI scouts;
     public TextMeshProUGUI checkpointsInNextWave;
     public TextMeshProUGUI checkpointsInGame;
+    public TextMeshProUGUI scoreText;
 
     public PlayerStatsManager previewStats;
     public bool isPlaying = false;
     public bool winGame;
-
+    public int score;
     private void Awake()
     {
         if (Instance == null)
@@ -164,6 +165,7 @@ public class UIManager : MonoBehaviour
     {
         homeCanvas.gameObject.SetActive(false);
         ManagerGame.Instance.isGame = true;
+        ManagerGame.Instance.waitingForPlayer = false;
         CheckPoint();
         gameCanvas.gameObject.SetActive(true);
     }
@@ -265,42 +267,64 @@ public class UIManager : MonoBehaviour
     public void OpenUpdateStats()
     {
         previewStats = ManagerGame.Instance.stats.Clone();
+        int wave = ManagerGame.Instance.currentWave;
+        score = ManagerGame.Instance.scoreAdd[wave - 1];
         UpdateUI();
     }
+
     //Add HP
     public void AddHP()
     {
-        previewStats.castle++;
-        UpdateUI();
+        if (score > 0)
+        {
+            previewStats.castle++;
+            score--;
+            UpdateUI();
+        }
     }
     //Add Speed Attacker
     public void AddSpeed()
     {
-        previewStats.attacker++;
-        UpdateUI();
+        if (score > 0)
+        {
+            previewStats.attacker++;
+            score--;
+            UpdateUI();
+        }
     }
     //Add Damage Defender
     public void AddDamage()
     {
-        previewStats.defender++;
-        UpdateUI();
+        if (score > 0)
+        {
+            previewStats.defender++;
+            score--;
+            UpdateUI();
+        }
     }
     //Add cooldown booster
     public void AddCoolDown()
     {
-        previewStats.booster++;
-        UpdateUI();
+        if (score > 0)
+        {
+            previewStats.booster++;
+            score--;
+            UpdateUI();
+        }
     }
     //Complete
     public void Complete()
     {
-        ManagerGame.Instance.stats.castle = previewStats.castle;
-        ManagerGame.Instance.stats.attacker = previewStats.attacker;
-        ManagerGame.Instance.stats.defender = previewStats.defender;
-        ManagerGame.Instance.stats.booster = previewStats.booster;
-        statsCanvas.gameObject.SetActive(false);
-        ManagerGame.Instance.UpdateStats();
-        BackHome();
+        if (score == 0)
+        {
+            ManagerGame.Instance.stats.castle = previewStats.castle;
+            ManagerGame.Instance.stats.attacker = previewStats.attacker;
+            ManagerGame.Instance.stats.defender = previewStats.defender;
+            ManagerGame.Instance.stats.booster = previewStats.booster;
+            statsCanvas.gameObject.SetActive(false);
+            ManagerGame.Instance.UpdateStats();
+            BackHome();
+        }
     }
     //Reset
     public void ResetStats()
@@ -313,5 +337,6 @@ public class UIManager : MonoBehaviour
         speedU.text = previewStats.attacker.ToString();
         damageU.text = previewStats.defender.ToString();
         cooldownBoosterU.text = previewStats.booster.ToString();
+        scoreText.text = "Score: " + score.ToString();
     }
 }
