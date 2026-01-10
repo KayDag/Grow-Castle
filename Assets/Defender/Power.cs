@@ -2,8 +2,9 @@
 
 public class Power : MonoBehaviour
 {
-    public float baseDamage = 2;
-    public float baseSpeed = 5f;
+    public float baseDamage = 25;
+    public float baseSpeed = 6f;
+    public float deltaDamage = 1.7f;
 
     private float damage;
     private float speed;
@@ -63,6 +64,11 @@ public class Power : MonoBehaviour
     public void ApplyStats(PlayerStatsManager stats)
     {
         damage = baseDamage * (1 + (stats.defender - 1) * 0.3f);
-        speed = baseSpeed * (1 + (stats.defender - 1) * 0.25f);
+        speed = baseSpeed * (1 + (stats.defender - 1) * 0.1f);
+    }
+    public void ApplyStatsBooster(PlayerStatsManager stats)
+    {
+        damage = baseDamage * (1 + (stats.defender - 1) * 0.3f) + (int)(deltaDamage + 0.3 * (stats.defender - 1));
+        speed = baseSpeed * (1 + (stats.defender - 1) * 0.1f);
     }
 }

@@ -201,9 +201,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  health: 10
-  speedMove: 1
+  health: 60
+  speedMove: 2.2
   cooldown: 2
+  goldDrop: 5
 --- !u!1 &544951515856126510
 GameObject:
   m_ObjectHideFlags: 0

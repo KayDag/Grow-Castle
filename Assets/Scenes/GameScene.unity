@@ -2863,7 +2863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 10
+  spawnEnemy: 15
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
   spawnInterval: 1.5
@@ -5800,7 +5800,7 @@ MonoBehaviour:
   attacker:
   - {fileID: 0}
   attPrefab: {fileID: 3355519906190159714, guid: 8c6aeac1418c63e48b086db8cd890c67, type: 3}
-  baseGold: 30
+  baseGold: 35
 --- !u!4 &873183302
 Transform:
   m_ObjectHideFlags: 0
@@ -6249,9 +6249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5e5846e4a20e74d92c1efc5e643a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
-  baseHealth: 200
-  stayHealth: 200
+  health: 1000
+  baseHealth: 1000
+  stayHealth: 1000
   door: {fileID: 181052873}
 --- !u!1 &933661484
 GameObject:
@@ -6503,7 +6503,7 @@ MonoBehaviour:
   - {fileID: 1073033596}
   - {fileID: 282223256}
   - {fileID: 1970162398}
-  currentWave: 2
+  currentWave: 0
   checkPoint: 03000000040000000500000007000000090000000c0000000f000000
   count: 0
   isGame: 0
@@ -6863,9 +6863,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 14
+  spawnEnemy: 20
   enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
-  spawnEnemy1: 4
+  spawnEnemy1: 5
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
 --- !u!1 &1088891291
@@ -11199,12 +11199,12 @@ MonoBehaviour:
   - {fileID: 1368477426}
   - {fileID: 275748169}
   def: {fileID: 63989725094973710, guid: 52726a471164f0d43a8df23484e426c7, type: 3}
-  baseGold: 40
-  cooldown: 10
+  baseGold: 50
+  cooldown: 18
   timerCooldown: 0
-  timeUse: 5
+  timeUse: 3
   timerBooster: 0
-  boosterFireRate: 0.15
+  boosterFireRate: 0.1
   isBooster: 0
   isUseBooster: 0
   imageButton: {fileID: 1719238673}

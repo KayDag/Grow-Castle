@@ -12,15 +12,15 @@ public class DefenderManager : MonoBehaviour
     private List<bool> check = new List<bool>(); // theo dõi điểm đã spawn chưa 
     public Defender def;
 
-    public int baseGold;
+    public int baseGold = 50;
 
-    public float cooldown;
+    public float cooldown = 18f;
     public float timerCooldown;
 
-    public float timeUse = 5;
+    public float timeUse = 3;
     public float timerBooster;
 
-    public float boosterFireRate = 0.15f; 
+    public float boosterFireRate = 0.1f; 
     private float boosterFireTimer;
 
     public bool isBooster = false;
@@ -47,7 +47,7 @@ public class DefenderManager : MonoBehaviour
     {
         timerCooldown = cooldown;
         isBooster = true;
-        baseGold = 35;
+        baseGold = 50;
 
         for (int i = 0; i < point.Count; i++)
         {
@@ -56,6 +56,9 @@ public class DefenderManager : MonoBehaviour
         Defender newDef = Instantiate(def, point[0].position, Quaternion.identity);
         defenders.Add(newDef);
         check[0] = true;
+
+        cooldown = 18f;
+        timeUse = 3f;
     }
 
     public void Update()
@@ -134,7 +137,7 @@ public class DefenderManager : MonoBehaviour
     }
     public void BuyBomber()
     {
-        int gold = baseGold + ((int)ManagerGame.Instance.stats.defender - 1) * 5;
+        int gold = baseGold + ((int)ManagerGame.Instance.stats.defender - 1) * 25;
         if (ManagerGame.Instance.stats.gold >= gold && def != null)
         {
             for (int i = 0; i < point.Count; i++)
@@ -156,5 +159,11 @@ public class DefenderManager : MonoBehaviour
     public bool FullDefender()
     {
         return (point.Count == defenders.Count);
+    }
+
+    public void ApplyStatsAll(PlayerStatsManager stats)
+    {
+        cooldown = (float)(18 - (stats.booster - 1) * 1.5);
+        timeUse = (float)(3 + (stats.booster - 1) * 0.8);
     }
 }

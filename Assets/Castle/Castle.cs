@@ -6,9 +6,9 @@ using UnityEngine;
 public class Castle : MonoBehaviour
 {
     public static Castle Instance;
-    public float health = 50;
-    public float baseHealth = 50;
-    public float stayHealth = 50;
+    public float health = 1000;
+    public float baseHealth = 1000;
+    public float stayHealth = 1000;
 
     public Transform door;
 

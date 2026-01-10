@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class Attacker : MonoBehaviour
 {
-    public float damage = 10;
-    public float baseDamage = 10;
-    public float health = 20;
-    public float baseHealth = 20;
-    public float speed = 2f;
-    public float baseSpeed = 2f;
-    public float cooldown = 1f;
+    public float damage = 8;
+    public float baseDamage = 8;
+    public float health = 140;
+    public float baseHealth = 140;
+    public float speed = 3.2f;
+    public float baseSpeed = 3.2f;
+    public float cooldown = 2f;
 
     private float timer;
     private Vector3 checkPoint;
@@ -155,8 +155,8 @@ public class Attacker : MonoBehaviour
     public void ApplyStats(PlayerStatsManager stats)
     {
         damage = baseDamage * (float)(1 + (stats.attacker - 1) * 0.15) ;
-        speed = baseSpeed * (float)(1 + (stats.attacker - 1) * 0.3);
-        health = baseHealth * (float)(1 + (stats.attacker - 1) * 0.25);
+        speed = baseSpeed * (float)(1 + (stats.attacker - 1) * 0.2);
+        health = baseHealth * (float)(1 + (stats.attacker - 1) * 0.35);
     }
 
 }

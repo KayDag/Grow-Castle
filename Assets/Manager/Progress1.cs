@@ -29,8 +29,6 @@ public class Progess1 : MonoBehaviour, IProgress
     {
         // tránh gọi spawn nhiều lần
         if (spawnCoroutine != null) return;
-
-        spawnIndex = 0;
         spawnCoroutine = StartCoroutine(SpawnWave());
     }
 

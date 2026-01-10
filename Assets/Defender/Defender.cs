@@ -32,6 +32,16 @@ public class Defender : MonoBehaviour
 
         Power p = b.GetComponent<Power>();
         if (p != null)
-            p.ApplyStats(ManagerGame.Instance.stats);
+        {
+            if (DefenderManager.Instance.isUseBooster)
+            {
+                p.ApplyStatsBooster(ManagerGame.Instance.stats);
+            }
+            else
+            {
+                p.ApplyStats(ManagerGame.Instance.stats);
+            }
+        }
+            
     }
 }

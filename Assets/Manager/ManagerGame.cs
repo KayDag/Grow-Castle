@@ -18,6 +18,7 @@ public class ManagerGame : MonoBehaviour
     public int count = 0;
 
     public bool isGame = false;
+    private bool isWaveStarted = false;
     public List<Enemy> aliveEnemies;
 
     public bool isLose = false;
@@ -50,6 +51,7 @@ public class ManagerGame : MonoBehaviour
         stats.gold = 50;
 
         currentWave = 0;
+        count = 0;
     }
 
     // Update is called once per frame
@@ -58,13 +60,19 @@ public class ManagerGame : MonoBehaviour
         if (!isGame) return;
         if (currentWave >= waves.Count) return;
 
-        waves[currentWave].StartWave();
+        if (!isWaveStarted)
+        {
+            waves[currentWave].StartWave();
+            isWaveStarted = true;
+        }
 
         if (waves[currentWave].IsDone())
         {
             isGame = false;
+            isWaveStarted = false;
             CheckWave();
         }
+
         if (isLose)
         {
             UIManager.Instance.LoseGame();
@@ -79,6 +87,7 @@ public class ManagerGame : MonoBehaviour
         if (count >= checkPoint[currentWave])
         {
             UIManager.Instance.WinGame();
+            waves[currentWave].ResetWave();
             currentWave++;
             count = 0;
         }
@@ -89,9 +98,11 @@ public class ManagerGame : MonoBehaviour
     }
     public void UpdateStats()
     {
-        Castle.Instance.health += Castle.Instance.baseHealth * (int)(1 + (stats.castle - 1) * 0.25);
+        Castle.Instance.health += Castle.Instance.baseHealth * 
+            Mathf.Pow((int)(1 + (stats.castle - 1) * 0.2), (stats.castle - 1));
         Castle.Instance.stayHealth = Castle.Instance.health;
         AttackerManager.Instance.ApplyStatsAll(ManagerGame.Instance.stats);
+        DefenderManager.Instance.ApplyStatsAll(ManagerGame.Instance.stats);
     }
     public void OnAttackerReachCheckpoint(Attacker att)
     {
