@@ -150,6 +150,7 @@ public class UIManager : MonoBehaviour
     public void ExitStats()
     {
         playerStatsCanvas.gameObject.SetActive(false);
+        AudioManager.Instance.PlayClick();
     }
     //Mở chỉ số
     public void OpenStats()
@@ -159,6 +160,7 @@ public class UIManager : MonoBehaviour
         speed.text = ManagerGame.Instance.stats.attacker.ToString();
         damage.text = ManagerGame.Instance.stats.defender.ToString();
         cooldownBooster.text = ManagerGame.Instance.stats.booster.ToString();
+        AudioManager.Instance.PlayClick();
     }
     //Play Game
     public void PlayGame()
@@ -168,6 +170,7 @@ public class UIManager : MonoBehaviour
         ManagerGame.Instance.waitingForPlayer = false;
         CheckPoint();
         gameCanvas.gameObject.SetActive(true);
+        AudioManager.Instance.PlayClick();
     }
     public void CheckPointNextWave()
     {
@@ -176,6 +179,7 @@ public class UIManager : MonoBehaviour
     //BuyScout
     public void BuyScout()
     {
+        AudioManager.Instance.PlayClick();
         if (AttackerManager.Instance.FullAttacker())
         {
             goldAttacker.text = "--";
@@ -189,6 +193,7 @@ public class UIManager : MonoBehaviour
     //BuyBomber
     public void BuyBomber()
     {
+        AudioManager.Instance.PlayClick();
         if (DefenderManager.Instance.FullDefender())
         {
             goldDefender.text = "--";
@@ -205,23 +210,26 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 0;
         pauseCanvas.gameObject.SetActive(true);
+        AudioManager.Instance.PlayClick();
     }
     //Back home when pause
     public void BackHomePause()
     {
         pauseCanvas.gameObject.SetActive(false);
         BackHome();
+        AudioManager.Instance.PlayClick();
     }
     //Resume Game
     public void ResumeGame()
     {
         pauseCanvas.gameObject.SetActive(false);
         Time.timeScale = 1;
+        AudioManager.Instance.PlayClick();
     }
     //Reset Game
     public void Replay()
     {
-
+        AudioManager.Instance.PlayClick();
     }
     //Lose Game
     public void LoseGame()
@@ -229,6 +237,7 @@ public class UIManager : MonoBehaviour
         defaultCanvas.gameObject.SetActive(false);
         gameCanvas.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(true);
+        AudioManager.Instance.PlayLose();
     }
     //Back Game when lose
     public void BackHomeLose()
@@ -255,6 +264,7 @@ public class UIManager : MonoBehaviour
         defaultCanvas.gameObject.SetActive(false);
         gameCanvas.gameObject.SetActive(false);
         winCanvas.gameObject.SetActive(true);
+        AudioManager.Instance.PlayWin();
     }
     //Award
     public void Reward()
@@ -275,6 +285,7 @@ public class UIManager : MonoBehaviour
     //Add HP
     public void AddHP()
     {
+        AudioManager.Instance.PlayClick();
         if (score > 0)
         {
             previewStats.castle++;
@@ -285,6 +296,7 @@ public class UIManager : MonoBehaviour
     //Add Speed Attacker
     public void AddSpeed()
     {
+        AudioManager.Instance.PlayClick();
         if (score > 0)
         {
             previewStats.attacker++;
@@ -295,6 +307,7 @@ public class UIManager : MonoBehaviour
     //Add Damage Defender
     public void AddDamage()
     {
+        AudioManager.Instance.PlayClick();
         if (score > 0)
         {
             previewStats.defender++;
@@ -305,6 +318,7 @@ public class UIManager : MonoBehaviour
     //Add cooldown booster
     public void AddCoolDown()
     {
+        AudioManager.Instance.PlayClick();
         if (score > 0)
         {
             previewStats.booster++;
@@ -315,6 +329,7 @@ public class UIManager : MonoBehaviour
     //Complete
     public void Complete()
     {
+        AudioManager.Instance.PlayClick();
         if (score == 0)
         {
             ManagerGame.Instance.stats.castle = previewStats.castle;
@@ -329,6 +344,7 @@ public class UIManager : MonoBehaviour
     //Reset
     public void ResetStats()
     {
+        AudioManager.Instance.PlayClick();
         OpenUpdateStats();
     }
     private void UpdateUI()

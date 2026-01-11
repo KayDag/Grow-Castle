@@ -114,6 +114,7 @@ public class Enemy : MonoBehaviour
 
     protected void Die()
     {
+        AudioManager.Instance.PlayCollectGold();
         PlayAnim(KeyAnimator.die);
         if (Progess1.Instance != null)
             Progess1.Instance.RemoveEnemy(this);

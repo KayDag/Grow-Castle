@@ -127,7 +127,7 @@ public class Attacker : MonoBehaviour
     void ReachCheckpoint()
     {
         if (reachedCheckpoint) return;
-
+        AudioManager.Instance.PlayReachCheckPoint();
         reachedCheckpoint = true;
         isAttacking = false;
         enemy = null;

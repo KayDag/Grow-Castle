@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -27,7 +27,7 @@ public class ManagerGame : MonoBehaviour
     public int aliveScouts = 0;
     public int completedScouts = 0;
 
-    public bool isLose = false;
+    public bool isEndWave = false;
     private void Awake()
     {
         if (Instance == null)
@@ -79,18 +79,16 @@ public class ManagerGame : MonoBehaviour
             DefenderManager.Instance.DestroyBall();
             CheckWave();
         }
-
-        if (isLose)
+        if (isEndWave)
         {
-            UIManager.Instance.LoseGame();
-            aliveEnemies.Clear();
+            AttackerManager.Instance.NewWave();
         }
     }
     //Go Wave
     public void EnterWave()
     {
+        isEndWave = false;
         waves[currentWave].ResetWave();
-        AttackerManager.Instance.NewWave();
         isWaveStarted = true;
         UpdateStats();
         waves[currentWave].StartWave();
@@ -99,7 +97,8 @@ public class ManagerGame : MonoBehaviour
     {
         if (currentWave >= checkPoint.Count)
             return;
-
+        isEndWave = true;
+        //Thắng
         if (count >= checkPoint[currentWave] && Castle.Instance.health > 0)
         {
             UIManager.Instance.WinGame();
@@ -107,11 +106,13 @@ public class ManagerGame : MonoBehaviour
             count = 0;
             stats.gold += 50 + currentWave * 25;
         }
+        //Thua
         else if (Castle.Instance.health <= 0)
         {
             count = 0;
             UIManager.Instance.LoseGame();
         }
+        //Thua nhưng vẫn được giữ checkpoint
         else
         {
             UIManager.Instance.LoseGame();

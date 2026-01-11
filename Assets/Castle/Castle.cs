@@ -44,7 +44,6 @@ public class Castle : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("Lose game");
-            ManagerGame.Instance.isLose = true;
         }
     }
 }
