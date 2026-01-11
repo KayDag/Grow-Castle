@@ -8,20 +8,29 @@ public class Power : MonoBehaviour
 
     private float damage;
     private float speed;
-    private Enemy target;
+
+    private Vector3 moveDir;
+    private bool isLocked = false;
+
+    void Start()
+    {
+        LockTargetDirection();
+    }
 
     void Update()
     {
-        if (target == null || !target.gameObject.activeInHierarchy)
-            FindTarget();
+        transform.position += moveDir * speed * Time.deltaTime;
 
-        Move();
+        // tự hủy khi ra khỏi màn hình
+        Vector3 view = Camera.main.WorldToViewportPoint(transform.position);
+        if (view.x < -0.1f || view.x > 1.1f || view.y < -0.1f || view.y > 1.1f)
+            Destroy(gameObject);
     }
 
-    void FindTarget()
+    void LockTargetDirection()
     {
-        float minDist = float.MaxValue;
         Enemy closest = null;
+        float minDist = float.MaxValue;
 
         foreach (var e in ManagerGame.Instance.aliveEnemies)
         {
@@ -35,26 +44,19 @@ public class Power : MonoBehaviour
             }
         }
 
-        target = closest;
-    }
+        if (closest != null)
+            moveDir = (closest.transform.position - transform.position).normalized;
+        else
+            moveDir = Vector3.right; // không có mục tiêu thì bắn thẳng
 
-    void Move()
-    {
-        if (target == null)
-        {
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
-            return;
-        }
-
-        Vector3 dir = (target.transform.position - transform.position).normalized;
-        transform.position += dir * speed * Time.deltaTime;
-        transform.right = dir; // xoay đầu đạn theo hướng bay
+        transform.right = moveDir;
+        isLocked = true;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         Enemy e = other.GetComponent<Enemy>();
-        if (e != null && e == target)
+        if (e != null)
         {
             e.TakeDamage((int)damage);
             Destroy(gameObject);
@@ -66,9 +68,11 @@ public class Power : MonoBehaviour
         damage = baseDamage * (1 + (stats.defender - 1) * 0.3f);
         speed = baseSpeed * (1 + (stats.defender - 1) * 0.1f);
     }
+
     public void ApplyStatsBooster(PlayerStatsManager stats)
     {
-        damage = baseDamage * (1 + (stats.defender - 1) * 0.3f) + (int)(deltaDamage + 0.3 * (stats.defender - 1));
+        damage = baseDamage * (1 + (stats.defender - 1) * 0.3f)
+                 + deltaDamage + 0.3f * (stats.defender - 1);
         speed = baseSpeed * (1 + (stats.defender - 1) * 0.1f);
     }
 }

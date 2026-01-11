@@ -8,4 +8,5 @@ public interface IProgress
     bool IsDone();
     void ResetWave();
     void Spawn(GameObject obj, float x, float yMin, float yMax);
+    void StopWave();
 }

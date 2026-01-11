@@ -24,6 +24,7 @@ public class Progess1 : MonoBehaviour, IProgress
 
     public void StartWave()
     {
+        if (!ManagerGame.Instance.isGame) return;
         // tránh gọi spawn nhiều lần
         if (spawnCoroutine != null) return;
         spawnCoroutine = StartCoroutine(SpawnWave());
@@ -48,6 +49,14 @@ public class Progess1 : MonoBehaviour, IProgress
             yield return new WaitForSeconds(5f); // ⭐ 3s sau mới spawn lượt tiếp
         }
         spawnCoroutine = null;
+    }
+    public void StopWave()
+    {
+        if (spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
+        }
     }
 
     public void RemoveEnemy(Enemy enemy)

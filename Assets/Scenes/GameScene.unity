@@ -5992,6 +5992,7 @@ MonoBehaviour:
   - {fileID: 1830751314}
   - {fileID: 195750087}
   - {fileID: 1929267966}
+  check: 
   attacker:
   - {fileID: 0}
   attPrefab: {fileID: 3355519906190159714, guid: 8c6aeac1418c63e48b086db8cd890c67, type: 3}
@@ -6742,7 +6743,7 @@ MonoBehaviour:
     attacker: 1
     castle: 1
     booster: 1
-    gold: 1
+    gold: 50
   waveObjects:
   - {fileID: 414200943}
   - {fileID: 1073033596}
@@ -6754,7 +6755,7 @@ MonoBehaviour:
   currentWave: 0
   checkPoint: 03000000040000000500000007000000090000000c0000000f000000
   count: 0
-  scoreAdd: 010000000100000002000000020000000300000004000000
+  scoreAdd: 020000000300000003000000040000000400000005000000
   isGame: 0
   aliveEnemies: []
   waitingForPlayer: 0

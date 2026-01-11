@@ -8,7 +8,7 @@ public class AttackerManager : MonoBehaviour
     public static AttackerManager Instance;
 
     public List<Transform> point;            // danh sách điểm spawn
-    private List<bool> check = new List<bool>(); // theo dõi điểm đã spawn chưa 
+    public List<bool> check = new List<bool>(); // theo dõi điểm đã spawn chưa 
     public List<Attacker> attacker = new List<Attacker>();
     private HashSet<Attacker> homeAttackers = new HashSet<Attacker>();
     public Attacker attPrefab;    
@@ -114,6 +114,36 @@ public class AttackerManager : MonoBehaviour
             }
         }
     }
+    public void ResetScouts()
+    {
+        int startAtt = 0;
+        // Xóa toàn bộ scout cũ
+        for (int i = attacker.Count - 1; i >= 0; i--)
+        {
+            if (attacker[i] != null)
+            {
+                Destroy(attacker[i].gameObject);
+                startAtt++;
+            }
+        }
+        attacker.Clear();
+
+        // Reset slot
+        for (int i = 0; i < check.Count; i++)
+            check[i] = false;
+
+        // Spawn lại scout ban đầu
+        for (int i = 0; i < startAtt; i++)
+        {
+            Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
+            newAtt.SetIndex(i);
+            Register(newAtt, i);
+        }
+
+        ManagerGame.Instance.aliveScouts = attacker.Count;
+        UIManager.Instance.Scouts();
+    }
+
 
     public bool FullAttacker()
     {

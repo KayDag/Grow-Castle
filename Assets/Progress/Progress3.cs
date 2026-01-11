@@ -36,6 +36,7 @@ public class Progress3 : MonoBehaviour,  IProgress
     }
     public void StartWave()
     {
+        if (!ManagerGame.Instance.isGame) return;
         if (spawnCoroutine == null)
             spawnCoroutine = StartCoroutine(SpawnWave());
     }
@@ -92,6 +93,14 @@ public class Progress3 : MonoBehaviour,  IProgress
         }
 
         spawnCoroutine = null;
+    }
+    public void StopWave()
+    {
+        if (spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
+        }
     }
     public bool IsDone()
     {

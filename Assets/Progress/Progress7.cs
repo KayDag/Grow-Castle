@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Progress6 : MonoBehaviour, IProgress
+public class Progress7 : MonoBehaviour, IProgress
 {
-    public static Progress6 Instance;
+    public static Progress7 Instance;
 
     public GameObject enemy;
-    private int spawnEnemy = 40;
+    private int spawnEnemy = 45;
 
     public GameObject enemy1;
-    private int spawnEnemy1 = 18;
+    private int spawnEnemy1 = 22;
 
     public GameObject enemy2;
-    private int spawnEnemy2 = 10;
+    private int spawnEnemy2 = 12;
 
     public GameObject boss;
-    private int spawnBoss = 1;
+    private int spawnBoss = 2;
 
     public Transform pointA, pointB;
 
@@ -39,6 +39,7 @@ public class Progress6 : MonoBehaviour, IProgress
 
     public void StartWave()
     {
+        if (!ManagerGame.Instance.isGame) return;
         if (spawnCoroutine == null)
             spawnCoroutine = StartCoroutine(SpawnWave());
     }
@@ -50,8 +51,8 @@ public class Progress6 : MonoBehaviour, IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // Phase 1 – spam lính nhanh (20s)
-        for (int i = 0; i < 8; i++)
+        // Phase 1 – spam quân ồ ạt (20s)
+        for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 5 && spawnIndex < spawnEnemy; j++)
             {
@@ -59,11 +60,10 @@ public class Progress6 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(2.2f);
         }
 
-        // Phase 2 – elite & heavy dồn dập (30s)
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 11; i++)
         {
             if (spawnIndex1 < spawnEnemy1)
             {
@@ -83,24 +83,39 @@ public class Progress6 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
+            // Boss 1 xuất hiện ở lượt thứ 4
+            if (i == 3 && spawnIndexBoss < spawnBoss)
+            {
+                // 🔥 CHỜ QUÉT SẠCH QUÁI TRƯỚC KHI GỌI BOSS
+                while (ManagerGame.Instance.aliveEnemies.Count > 0)
+                    yield return null;
+
+                Spawn(boss, x, 0f, 0f);
+                spawnIndexBoss++;
+            }
+
             yield return new WaitForSeconds(3f);
         }
 
-        // Phase 3 – nghỉ rất ngắn
-        yield return new WaitForSeconds(2f);
+        // Phase 3 – boss cuối kết liễu
+        while (ManagerGame.Instance.aliveEnemies.Count > 0)
+            yield return null;
 
-        // Phase 4 – Boss xuất hiện khi vẫn còn quái lẻ
         if (spawnIndexBoss < spawnBoss)
         {
-            GameObject b = Instantiate(boss, new Vector3(x, 0f, 0f), Quaternion.identity);
-            Enemy c = b.GetComponent<Enemy>();
-            if (c != null)
-                ManagerGame.Instance.aliveEnemies.Add(c);
-
+            Spawn(boss, x, 0f, 0f);
             spawnIndexBoss++;
         }
 
         spawnCoroutine = null;
+    }
+    public void StopWave()
+    {
+        if (spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
+        }
     }
     public bool IsDone()
     {

@@ -9,6 +9,10 @@ public class ManagerGame : MonoBehaviour
     public static ManagerGame Instance;
 
     public PlayerStatsManager stats;
+    private PlayerStatsManager waveStartStats;
+    private float waveStartGold;
+    private int waveStartCount;
+    private int waveStartWave;
 
     public List<MonoBehaviour> waveObjects;
     private List<IProgress> waves = new List<IProgress>();
@@ -17,7 +21,7 @@ public class ManagerGame : MonoBehaviour
     public List<int> checkPoint = new List<int>() { 3, 4, 5, 7, 9, 12, 15 };
     public int count = 0;
 
-    public List<int> scoreAdd = new List<int>() { 2, 3, 3, 4, 4, 7 };
+    public List<int> scoreAdd = new List<int>() { 2, 3, 3, 4, 4, 5 };
 
     public bool isGame = false;
     private bool isWaveStarted = false;
@@ -71,22 +75,31 @@ public class ManagerGame : MonoBehaviour
             EnterWave();
         }
 
-        if (waves[currentWave].IsDone() && aliveScouts == 0)
+        if ((waves[currentWave].IsDone() && aliveScouts == 0) || Castle.Instance.health <= 0)
         {
             isGame = false;
             isWaveStarted = false;
             waitingForPlayer = true;
             DefenderManager.Instance.DestroyBall();
+            foreach (var e in aliveEnemies)
+                if (e != null) Destroy(e.gameObject);
+            aliveEnemies.Clear();
             CheckWave();
         }
         if (isEndWave)
         {
             AttackerManager.Instance.NewWave();
+            isEndWave = false;
         }
     }
     //Go Wave
     public void EnterWave()
     {
+        waveStartStats = stats.Clone();
+        waveStartGold = stats.gold;
+        waveStartCount = count;
+        waveStartWave = currentWave;
+
         isEndWave = false;
         waves[currentWave].ResetWave();
         isWaveStarted = true;
@@ -98,6 +111,7 @@ public class ManagerGame : MonoBehaviour
         if (currentWave >= checkPoint.Count)
             return;
         isEndWave = true;
+        waves[currentWave].StopWave();
         //Thắng
         if (count >= checkPoint[currentWave] && Castle.Instance.health > 0)
         {
@@ -118,10 +132,37 @@ public class ManagerGame : MonoBehaviour
             UIManager.Instance.LoseGame();
         }
     }
+    public void ResetCurrentWave()
+    {
+        waves[currentWave].StopWave();
+        // reset stats
+        stats.castle = waveStartStats.castle;
+        stats.attacker = waveStartStats.attacker;
+        stats.defender = waveStartStats.defender;
+        stats.booster = waveStartStats.booster;
+        stats.gold = waveStartGold;
+
+        count = waveStartCount;
+        currentWave = waveStartWave;
+
+        // destroy enemy còn sống
+        DestroyEnemy();
+
+        // destroy đạn
+        DefenderManager.Instance.DestroyBall();
+
+        // reset castle
+        Castle.Instance.health = Castle.Instance.stayHealth;
+        AttackerManager.Instance.ResetScouts();
+        waves[currentWave].ResetWave();
+
+        isGame = false;
+        isWaveStarted = false;
+    }
+
     public void UpdateStats()
     {
-        Castle.Instance.health += Castle.Instance.baseHealth * 
-            Mathf.Pow((int)(1 + (stats.castle - 1) * 0.2), (stats.castle - 1));
+        Castle.Instance.health = Castle.Instance.baseHealth * (float)(1 + (stats.castle - 1) * 0.2);
         Castle.Instance.stayHealth = Castle.Instance.health;
         AttackerManager.Instance.ApplyStatsAll(ManagerGame.Instance.stats);
         DefenderManager.Instance.ApplyStatsAll(ManagerGame.Instance.stats);
@@ -132,5 +173,11 @@ public class ManagerGame : MonoBehaviour
         completedScouts++;
         stats.gold += stats.attacker * 10;
         UIManager.Instance.CheckPoint();
+    }
+    void DestroyEnemy()
+    {
+        foreach (var e in aliveEnemies)
+            if (e != null) Destroy(e.gameObject);
+        aliveEnemies.Clear();
     }
 }

@@ -48,6 +48,10 @@ public class UIManager : MonoBehaviour
     public bool isPlaying = false;
     public bool winGame;
     public int score;
+
+    private bool canBackHomeLose = false;
+    private bool canReward = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -215,7 +219,9 @@ public class UIManager : MonoBehaviour
     //Back home when pause
     public void BackHomePause()
     {
+        Time.timeScale = 1;
         pauseCanvas.gameObject.SetActive(false);
+        ManagerGame.Instance.ResetCurrentWave();
         BackHome();
         AudioManager.Instance.PlayClick();
     }
@@ -229,7 +235,14 @@ public class UIManager : MonoBehaviour
     //Reset Game
     public void Replay()
     {
+        Time.timeScale = 1;
         AudioManager.Instance.PlayClick();
+        pauseCanvas.gameObject.SetActive(false);
+
+        ManagerGame.Instance.ResetCurrentWave();
+
+        gameCanvas.gameObject.SetActive(true);
+        ManagerGame.Instance.isGame = true;
     }
     //Lose Game
     public void LoseGame()
@@ -238,10 +251,19 @@ public class UIManager : MonoBehaviour
         gameCanvas.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(true);
         AudioManager.Instance.PlayLose();
+
+        canBackHomeLose = false;
+        StartCoroutine(DelayBackHomeLose());
+    }
+    private IEnumerator DelayBackHomeLose()
+    {
+        yield return new WaitForSeconds(5f);
+        canBackHomeLose = true;
     }
     //Back Game when lose
     public void BackHomeLose()
     {
+        if (!canBackHomeLose) return;
         loseCanvas.gameObject.SetActive(false);
         BackHome();
     }
@@ -265,10 +287,18 @@ public class UIManager : MonoBehaviour
         gameCanvas.gameObject.SetActive(false);
         winCanvas.gameObject.SetActive(true);
         AudioManager.Instance.PlayWin();
+        canReward = false;
+        StartCoroutine(DelayReward());
     }
-    //Award
+    private IEnumerator DelayReward()
+    {
+        yield return new WaitForSeconds(3f);
+        canReward = true;
+    }
+    //reward
     public void Reward()
     {
+        if (!canReward) return;
         winCanvas.gameObject.SetActive(false);
         statsCanvas.gameObject.SetActive(true);
         OpenUpdateStats();
