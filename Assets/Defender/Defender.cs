@@ -42,6 +42,7 @@ public class Defender : MonoBehaviour
                 p.ApplyStats(ManagerGame.Instance.stats);
             }
         }
+        DefenderManager.Instance.ball.Add(b);
             
     }
 }

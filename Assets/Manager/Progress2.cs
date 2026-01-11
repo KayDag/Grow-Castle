@@ -7,10 +7,10 @@ public class Progress2 : MonoBehaviour, IProgress
     public static Progress2 Instance;
 
     public GameObject enemy;
-    public int spawnEnemy = 14;
+    private int spawnEnemy = 20;
 
     public GameObject enemy1;
-    public int spawnEnemy1 = 4;
+    private int spawnEnemy1 = 5;
 
     public Transform pointA, pointB;
 
@@ -31,46 +31,31 @@ public class Progress2 : MonoBehaviour, IProgress
         if (spawnCoroutine == null)
             spawnCoroutine = StartCoroutine(SpawnWave());
     }
-    //Time wave = 20s
+    //>= 20s
     private IEnumerator SpawnWave()
     {
         float x = pointA.position.x;
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
-
-        // lặp cho đến khi spawn hết enemy1 và enemy
-        while (spawnIndex1 < spawnEnemy1 || spawnIndex < spawnEnemy)
+        while (spawnIndex < spawnEnemy || spawnIndex1 < spawnEnemy1)
         {
-            // Spawn 1 enemy1 nếu chưa đủ
+            // ⭐ Spawn 1 enemy1
             if (spawnIndex1 < spawnEnemy1)
             {
-                float y1 = Random.Range(yMin, yMax);
-                GameObject e1 = Instantiate(enemy1, new Vector3(x, y1, 0f), Quaternion.identity);
-
-                Enemy e1Comp = e1.GetComponent<Enemy>();
-                if (e1Comp != null)
-                    ManagerGame.Instance.aliveEnemies.Add(e1Comp);
+                Spawn(enemy1, x, yMin, yMax);
                 spawnIndex1++;
             }
+            yield return new WaitForSeconds(1.5f);
 
-            yield return new WaitForSeconds(2f); // delay 1s sau enemy1
-
-            // Spawn 3 enemy thường nếu còn
-            int spawnCount = Mathf.Min(3, spawnEnemy - spawnIndex);
-            for (int i = 0; i < spawnCount; i++)
+            // ⭐ Spawn 4 enemy
+            for (int i = 0; i < 4 && spawnIndex < spawnEnemy; i++)
             {
-                float y = Random.Range(yMin, yMax);
-                GameObject e = Instantiate(enemy, new Vector3(x, y, 0f), Quaternion.identity);
-
-                Enemy eComp = e.GetComponent<Enemy>();
-                if (eComp != null)
-                    ManagerGame.Instance.aliveEnemies.Add(eComp);
+                Spawn(enemy, x, yMin, yMax);
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(3f); // delay 1.5s sau 3 enemy
+            yield return new WaitForSeconds(3.5f);
         }
-
         spawnCoroutine = null;
     }
     public bool IsDone()
@@ -82,5 +67,14 @@ public class Progress2 : MonoBehaviour, IProgress
         spawnIndex = 0;
         spawnIndex1 = 0;
         spawnCoroutine = null;
+    }
+    public void Spawn(GameObject obj, float x, float yMin, float yMax)
+    {
+        float y = Random.Range(yMin, yMax);
+        GameObject e = Instantiate(obj, new Vector3(x, y, 0f), Quaternion.identity);
+
+        Enemy c = e.GetComponent<Enemy>();
+        if (c != null)
+            ManagerGame.Instance.aliveEnemies.Add(c);
     }
 }

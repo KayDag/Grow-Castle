@@ -70,6 +70,7 @@ public class AttackerManager : MonoBehaviour
             }
         }
     }
+
     public void Register(Attacker att, int index)
     {
         attacker.Add(att);
@@ -97,13 +98,19 @@ public class AttackerManager : MonoBehaviour
                 attacker.RemoveAt(i);
                 continue;
             }
+        }
+        int needSpawn = ManagerGame.Instance.completedScouts;
+        ManagerGame.Instance.completedScouts = 0;
 
-            if (homeAttackers.Contains(att))
+        for (int i = 0; i < point.Count && needSpawn > 0; i++)
+        {
+            if (!check[i] && point[i] != null)
             {
-                att.transform.position = point[att.GetIndex()].position;
-                att.ResetState();
-                att.gameObject.SetActive(true);
-                homeAttackers.Remove(att);
+                Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
+                newAtt.SetIndex(i);
+                Register(newAtt, i);
+                ManagerGame.Instance.aliveScouts++;
+                needSpawn--;
             }
         }
     }
@@ -120,9 +127,4 @@ public class AttackerManager : MonoBehaviour
                 att.ApplyStats(stats);
         }
     }
-    public void MarkReturnHome(Attacker att)
-    {
-        homeAttackers.Add(att);
-    }
-
 }

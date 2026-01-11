@@ -7,12 +7,9 @@ public class Progess1 : MonoBehaviour, IProgress
     public static Progess1 Instance;
 
     public GameObject enemy;
-    public int spawnEnemy = 5;
+    private int spawnEnemy = 15;
 
-    public Transform pointA, pointB;
-
-    public float spawnInterval = 2f;          
-    public int spawnPerTime = 2;             
+    public Transform pointA, pointB;          
 
     private int spawnIndex = 0;
     private Coroutine spawnCoroutine;
@@ -31,7 +28,7 @@ public class Progess1 : MonoBehaviour, IProgress
         if (spawnCoroutine != null) return;
         spawnCoroutine = StartCoroutine(SpawnWave());
     }
-
+    //>= 9s
     IEnumerator SpawnWave()
     {
         float x = pointA.position.x;
@@ -40,35 +37,16 @@ public class Progess1 : MonoBehaviour, IProgress
 
         while (spawnIndex < spawnEnemy)
         {
-            // tạo list chứa Y cho mỗi con trong lần spawn
-            List<float> spawnYs = new List<float>();
+            int batchCount = Mathf.Min(5, spawnEnemy - spawnIndex);
 
-            for (int i = 0; i < spawnPerTime; i++)
+            for (int i = 0; i < batchCount; i++)
             {
-                if (spawnIndex + i >= spawnEnemy) break;
-
-                // chia đều đoạn và random trong phần nhỏ
-                float segmentHeight = (yMax - yMin) / spawnPerTime;
-                float y = yMin + segmentHeight * i + Random.Range(0f, segmentHeight);
-
-                spawnYs.Add(y);
-            }
-
-            // spawn từng con
-            for (int i = 0; i < spawnYs.Count; i++)
-            {
-                GameObject enemy1 = Instantiate(enemy, new Vector3(x, spawnYs[i], 0f), Quaternion.identity);
-
-                Enemy enemyComp = enemy1.GetComponent<Enemy>();
-                if (enemyComp != null)
-                    ManagerGame.Instance.aliveEnemies.Add(enemyComp);
-
+                Spawn(enemy, x, yMin, yMax);
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(spawnInterval);
+            yield return new WaitForSeconds(5f); // ⭐ 3s sau mới spawn lượt tiếp
         }
-
         spawnCoroutine = null;
     }
 
@@ -87,5 +65,13 @@ public class Progess1 : MonoBehaviour, IProgress
         spawnIndex = 0;
         spawnCoroutine = null;
     }
+    public void Spawn(GameObject obj, float x, float yMin, float yMax)
+    {
+        float y = Random.Range(yMin, yMax);
+        GameObject e = Instantiate(obj, new Vector3(x, y, 0f), Quaternion.identity);
 
+        Enemy c = e.GetComponent<Enemy>();
+        if (c != null)
+            ManagerGame.Instance.aliveEnemies.Add(c);
+    }
 }

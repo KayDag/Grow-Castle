@@ -11,6 +11,7 @@ public class DefenderManager : MonoBehaviour
     public List<Transform> point;            // danh sách điểm spawn
     private List<bool> check = new List<bool>(); // theo dõi điểm đã spawn chưa 
     public Defender def;
+    public List<GameObject> ball;
 
     public int baseGold = 50;
 
@@ -165,5 +166,14 @@ public class DefenderManager : MonoBehaviour
     {
         cooldown = (float)(18 - (stats.booster - 1) * 1.5);
         timeUse = (float)(3 + (stats.booster - 1) * 0.8);
+    }
+    public void DestroyBall()
+    {
+        for (int i = ball.Count - 1; i >= 0; i--)
+        {
+            if (ball[i] != null)
+                Destroy(ball[i]);
+            ball.RemoveAt(i);
+        }
     }
 }

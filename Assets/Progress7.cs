@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Progress4 : MonoBehaviour, IProgress
+public class Progress7 : MonoBehaviour, IProgress
 {
-    public static Progress4 Instance;
+    public static Progress7 Instance;
 
     public GameObject enemy;
-    private int spawnEnemy = 30;
+    private int spawnEnemy = 45;
 
     public GameObject enemy1;
-    private int spawnEnemy1 = 12;
+    private int spawnEnemy1 = 22;
 
     public GameObject enemy2;
-    private int spawnEnemy2 = 5;
+    private int spawnEnemy2 = 12;
+
+    public GameObject boss;
+    private int spawnBoss = 2;
 
     public Transform pointA, pointB;
 
     private int spawnIndex = 0;
     private int spawnIndex1 = 0;
     private int spawnIndex2 = 0;
+    private int spawnIndexBoss = 0;
     private Coroutine spawnCoroutine;
-
     private void Awake()
     {
         if (Instance == null)
@@ -33,6 +36,7 @@ public class Progress4 : MonoBehaviour, IProgress
             Destroy(this);
         }
     }
+
     public void StartWave()
     {
         if (spawnCoroutine == null)
@@ -46,59 +50,71 @@ public class Progress4 : MonoBehaviour, IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // spawn 2 enemy2 đầu tiên
-        for (int i = 0; i < 2 && spawnIndex2 < spawnEnemy2; i++)
+        // Phase 1 – spam quân ồ ạt (20s)
+        for (int i = 0; i < 9; i++)
         {
-            Spawn(enemy2, x, yMin, yMax);
-            spawnIndex2++;
-        }
-
-        //khi 2 enemy2 đầu tiên chết hết
-        while (ManagerGame.Instance.aliveEnemies.Count > 0)
-            yield return null;
-
-        //chạy 3 wave lớn
-        for (int w = 0; w < 3; w++)
-        {
-            // spawn 10 enemy thường
-            for (int i = 0; i < 10 && spawnIndex < spawnEnemy; i++)
+            for (int j = 0; j < 5 && spawnIndex < spawnEnemy; j++)
             {
                 Spawn(enemy, x, yMin, yMax);
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(2.2f);
+        }
 
-            // spawn 4 enemy1
-            for (int i = 0; i < 4 && spawnIndex1 < spawnEnemy1; i++)
+        // Phase 2 – elite & heavy dồn dập (30s)
+        for (int i = 0; i < 11; i++)
+        {
+            if (spawnIndex1 < spawnEnemy1)
             {
                 Spawn(enemy1, x, yMin, yMax);
                 spawnIndex1++;
             }
 
-            yield return new WaitForSeconds(3f);
-
-            // spawn 1 enemy2
             if (spawnIndex2 < spawnEnemy2)
             {
                 Spawn(enemy2, x, yMin, yMax);
                 spawnIndex2++;
             }
 
-            // cách wave 3s
-            yield return new WaitForSeconds(4f);
+            for (int j = 0; j < 3 && spawnIndex < spawnEnemy; j++)
+            {
+                Spawn(enemy, x, yMin, yMax);
+                spawnIndex++;
+            }
+
+            // Boss 1 xuất hiện ở lượt thứ 4
+            if (i == 3 && spawnIndexBoss < spawnBoss)
+            {
+                Spawn(boss, x, 0f, 0f);
+                spawnIndexBoss++;
+            }
+
+            yield return new WaitForSeconds(3f);
         }
+
+        // Phase 3 – boss cuối kết liễu
+        yield return new WaitForSeconds(3f);
+
+        if (spawnIndexBoss < spawnBoss)
+        {
+            Spawn(boss, x, 0f, 0f);
+            spawnIndexBoss++;
+        }
+
+        spawnCoroutine = null;
     }
     public bool IsDone()
     {
         return (spawnIndex >= spawnEnemy && spawnIndex1 >= spawnEnemy1 &&
-            spawnIndex2 >= spawnEnemy2 && ManagerGame.Instance.aliveEnemies.Count == 0);
+            spawnIndex2 >= spawnEnemy2 && spawnIndexBoss >= spawnBoss && ManagerGame.Instance.aliveEnemies.Count == 0);
     }
     public void ResetWave()
     {
         spawnIndex = 0;
         spawnIndex1 = 0;
         spawnIndex2 = 0;
+        spawnIndexBoss = 0;
         spawnCoroutine = null;
     }
     public void Spawn(GameObject obj, float x, float yMin, float yMax)

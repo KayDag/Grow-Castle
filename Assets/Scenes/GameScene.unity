@@ -2291,9 +2291,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 18
   enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
-  spawnEnemy1: 9
+  enemy2: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
 --- !u!1 &291967486
@@ -2867,11 +2866,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 15
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
-  spawnInterval: 1.5
-  spawnPerTime: 2
 --- !u!1 &445812833
 GameObject:
   m_ObjectHideFlags: 0
@@ -4662,7 +4658,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a95f927913955cb41906e4ae425d14c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 6521871623179255110, guid: e1494dd7814a9cf4d9528956d7bff250, type: 3}
+  enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
+  enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
+  enemy2: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
+  boss: {fileID: 6521871623179255110, guid: e1494dd7814a9cf4d9528956d7bff250, type: 3}
+  pointA: {fileID: 1156860775}
+  pointB: {fileID: 645665465}
 --- !u!1 &713096862
 GameObject:
   m_ObjectHideFlags: 0
@@ -6601,6 +6602,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942509892}
   m_CullTransparentMesh: 1
+--- !u!1 &1020971730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1020971732}
+  - component: {fileID: 1020971731}
+  m_Layer: 0
+  m_Name: Progress7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1020971731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020971730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9234b7d9a08b7d49a03273fe8811c06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
+  enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
+  enemy2: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
+  boss: {fileID: 6521871623179255110, guid: e1494dd7814a9cf4d9528956d7bff250, type: 3}
+  pointA: {fileID: 1156860775}
+  pointB: {fileID: 645665465}
+--- !u!4 &1020971732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020971730}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1032606344}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1032606342
 GameObject:
   m_ObjectHideFlags: 0
@@ -6641,6 +6692,9 @@ MonoBehaviour:
   - {fileID: 1073033596}
   - {fileID: 282223256}
   - {fileID: 1970162398}
+  - {fileID: 712859319}
+  - {fileID: 1518196441}
+  - {fileID: 1020971731}
   currentWave: 0
   checkPoint: 03000000040000000500000007000000090000000c0000000f000000
   count: 0
@@ -6649,6 +6703,7 @@ MonoBehaviour:
   aliveEnemies: []
   waitingForPlayer: 0
   aliveScouts: 0
+  completedScouts: 0
   isLose: 0
 --- !u!4 &1032606344
 Transform:
@@ -6669,6 +6724,8 @@ Transform:
   - {fileID: 282223255}
   - {fileID: 1970162397}
   - {fileID: 712859318}
+  - {fileID: 1518196442}
+  - {fileID: 1020971732}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1047342778
@@ -7004,9 +7061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 20
   enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
-  spawnEnemy1: 5
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
 --- !u!1 &1088891291
@@ -9007,6 +9062,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506599487}
   m_CullTransparentMesh: 1
+--- !u!1 &1518196440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1518196442}
+  - component: {fileID: 1518196441}
+  m_Layer: 0
+  m_Name: Progress6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1518196441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518196440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95bb6c22eeaaf594b813b464839ee930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
+  spawnEnemy: 40
+  enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
+  spawnEnemy1: 18
+  enemy2: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
+  spawnEnemy2: 10
+  boss: {fileID: 6521871623179255110, guid: e1494dd7814a9cf4d9528956d7bff250, type: 3}
+  spawnBoss: 1
+  pointA: {fileID: 1156860775}
+  pointB: {fileID: 645665465}
+--- !u!4 &1518196442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518196440}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1032606344}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1520751640
 GameObject:
   m_ObjectHideFlags: 0
@@ -11339,6 +11448,7 @@ MonoBehaviour:
   - {fileID: 1368477426}
   - {fileID: 275748169}
   def: {fileID: 63989725094973710, guid: 52726a471164f0d43a8df23484e426c7, type: 3}
+  ball: []
   baseGold: 50
   cooldown: 18
   timerCooldown: 0
@@ -12055,9 +12165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 354847062403036099, guid: 36db7f8a071d99440a31631cff237e67, type: 3}
-  spawnEnemy: 35
-  enemy1: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
-  spawnEnemy1: 5
+  enemy1: {fileID: 3730658797635586715, guid: cc31dc9b9519ba3488e4d2a6e3dbee44, type: 3}
+  enemy2: {fileID: 7027298483620430727, guid: 6fee044b25fd0f94c84cd99a4018024d, type: 3}
   pointA: {fileID: 1156860775}
   pointB: {fileID: 645665465}
 --- !u!1 &2015911548

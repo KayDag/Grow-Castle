@@ -17,7 +17,7 @@ public class ManagerGame : MonoBehaviour
     public List<int> checkPoint = new List<int>() { 3, 4, 5, 7, 9, 12, 15 };
     public int count = 0;
 
-    public List<int> scoreAdd = new List<int>() { 1, 1, 2, 2, 3, 4 };
+    public List<int> scoreAdd = new List<int>() { 2, 3, 3, 4, 4, 7 };
 
     public bool isGame = false;
     private bool isWaveStarted = false;
@@ -25,6 +25,7 @@ public class ManagerGame : MonoBehaviour
     public bool waitingForPlayer = false;
 
     public int aliveScouts = 0;
+    public int completedScouts = 0;
 
     public bool isLose = false;
     private void Awake()
@@ -75,6 +76,7 @@ public class ManagerGame : MonoBehaviour
             isGame = false;
             isWaveStarted = false;
             waitingForPlayer = true;
+            DefenderManager.Instance.DestroyBall();
             CheckWave();
         }
 
@@ -87,29 +89,23 @@ public class ManagerGame : MonoBehaviour
     //Go Wave
     public void EnterWave()
     {
+        waves[currentWave].ResetWave();
+        AttackerManager.Instance.NewWave();
         isWaveStarted = true;
         UpdateStats();
         waves[currentWave].StartWave();
-        ManagerGame.Instance.aliveScouts = 0;
-        foreach (var att in AttackerManager.Instance.attacker)
-        {
-            if (att != null)
-                ManagerGame.Instance.aliveScouts++;
-        }
     }
     public void CheckWave()
     {
         if (currentWave >= checkPoint.Count)
             return;
 
-        if (count >= checkPoint[currentWave])
+        if (count >= checkPoint[currentWave] && Castle.Instance.health > 0)
         {
             UIManager.Instance.WinGame();
-            waves[currentWave].ResetWave();
             currentWave++;
             count = 0;
-            stats.gold += 100 + currentWave * 50;
-            AttackerManager.Instance.NewWave();
+            stats.gold += 50 + currentWave * 25;
         }
         else if (Castle.Instance.health <= 0)
         {
@@ -119,8 +115,6 @@ public class ManagerGame : MonoBehaviour
         else
         {
             UIManager.Instance.LoseGame();
-            waves[currentWave].ResetWave();
-            AttackerManager.Instance.NewWave();
         }
     }
     public void UpdateStats()
@@ -134,8 +128,8 @@ public class ManagerGame : MonoBehaviour
     public void OnAttackerReachCheckpoint(Attacker att)
     {
         count++;
-        stats.gold += stats.attacker * 15;
+        completedScouts++;
+        stats.gold += stats.attacker * 10;
         UIManager.Instance.CheckPoint();
-        aliveScouts--;
     }
 }

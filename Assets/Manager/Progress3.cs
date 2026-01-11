@@ -1,21 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Progress3 : MonoBehaviour
+public class Progress3 : MonoBehaviour,  IProgress
 {
     public static Progress3 Instance;
 
     public GameObject enemy;
-    public int spawnEnemy = 18;
+    private int spawnEnemy = 25;
 
     public GameObject enemy1;
-    public int spawnEnemy1 = 9;
+    private int spawnEnemy1 = 8;
+
+    public GameObject enemy2;
+    private int spawnEnemy2 = 3;
 
     public Transform pointA, pointB;
 
     private int spawnIndex = 0;
     private int spawnIndex1 = 0;
+    private int spawnIndex2 = 0;
     private Coroutine spawnCoroutine;
 
     private void Awake()
@@ -40,52 +45,73 @@ public class Progress3 : MonoBehaviour
         float x = pointA.position.x;
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
-
-        int totalWaves = 9; // 9 đợt spawn
-        for (int wave = 0; wave < totalWaves; wave++)
+        while (spawnIndex < spawnEnemy || spawnIndex1 < spawnEnemy1 || spawnIndex2 < spawnEnemy2)
         {
-            // Spawn 1 enemy1 nếu còn
-            if (spawnIndex1 < spawnEnemy1)
+            //spawn 9 enemy
+            for (int i = 0; i < 9; i++)
             {
-                float y1 = Random.Range(yMin, yMax);
-                GameObject e1 = Instantiate(enemy1, new Vector3(x, y1, 0f), Quaternion.identity);
-
-                Enemy e1Comp = e1.GetComponent<Enemy>();
-                if (e1Comp != null)
-                    ManagerGame.Instance.aliveEnemies.Add(e1Comp);
-
-                spawnIndex1++;
+                if (spawnIndex < spawnEnemy)
+                {
+                    Spawn(enemy, x, yMin, yMax);
+                    spawnIndex++;
+                }
             }
-
-            // Spawn 2 enemy thường nếu còn
-            for (int i = 0; i < 2; i++)
+            yield return new WaitForSeconds(2.2f);
+            //8 wave spawn 1 enemy1 và 2 enemy thường (cách nhau 2.s) đến wave thứ 4 thì spawn enemy2
+            for (int i = 0; i < 8; i++)
             {
-                if (spawnIndex >= spawnEnemy) break;
-
-                float y = Random.Range(yMin, yMax);
-                GameObject e = Instantiate(enemy, new Vector3(x, y, 0f), Quaternion.identity);
-
-                Enemy eComp = e.GetComponent<Enemy>();
-                if (eComp != null)
-                    ManagerGame.Instance.aliveEnemies.Add(eComp);
-
-                spawnIndex++;
+                if (spawnIndex1 < spawnEnemy1)
+                {
+                    Spawn(enemy1, x, yMin, yMax);
+                    spawnIndex1++;
+                }
+                for (int j = 0; j < 2; j++)
+                {
+                    if (spawnIndex < spawnEnemy)
+                    {
+                        Spawn(enemy, x, yMin, yMax);
+                        spawnIndex++;
+                    }
+                }
+                if (i == 4)
+                {
+                    yield return new WaitForSeconds(1.2f);
+                    Spawn(enemy2, x, yMin, yMax);
+                    spawnIndex2++;
+                    yield return new WaitForSeconds(1.5f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.8f);
+                }
             }
-
-            // Delay giữa các đợt
-            yield return new WaitForSeconds(4f);
+            //khi kết thúc 8 wave quái thường thì xuất hiện cùng lúc 2 enemy2
+            Spawn(enemy2, x, yMin, yMin);
+            Spawn(enemy2, x, yMax, yMax);
+            spawnIndex2 += 2;
         }
 
         spawnCoroutine = null;
     }
     public bool IsDone()
     {
-        return (spawnIndex >= spawnEnemy && spawnIndex1 >= spawnEnemy1 && ManagerGame.Instance.aliveEnemies.Count == 0);
+        return (spawnIndex >= spawnEnemy && spawnIndex1 >= spawnEnemy1 &&
+            spawnIndex2 >= spawnEnemy2 && ManagerGame.Instance.aliveEnemies.Count == 0);
     }
     public void ResetWave()
     {
         spawnIndex = 0;
         spawnIndex1 = 0;
+        spawnIndex2 = 0;
         spawnCoroutine = null;
+    }
+    public void Spawn(GameObject obj, float x, float yMin, float yMax)
+    {
+        float y = Random.Range(yMin, yMax);
+        GameObject e = Instantiate(obj, new Vector3(x, y, 0f), Quaternion.identity);
+
+        Enemy c = e.GetComponent<Enemy>();
+        if (c != null)
+            ManagerGame.Instance.aliveEnemies.Add(c);
     }
 }

@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: -4600601804224840738}
   m_Layer: 0
   m_Name: Nightmare
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -897,7 +897,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 15
   health: 260
-  speedMove: 2.5
+  speedMove: 1.2
   cooldown: 3
   goldDrop: 20
 --- !u!1 &8720533764174087087

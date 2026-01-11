@@ -540,7 +540,7 @@ GameObject:
   - component: {fileID: -1690417446453602515}
   m_Layer: 0
   m_Name: Juggernaut
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -729,9 +729,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 35
   health: 2500
-  speedMove: 1.2
+  speedMove: 0
   cooldown: 2
-  goldDrop: 150
+  goldDrop: 75
 --- !u!1 &6732969294168864728
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,8 +2,8 @@
 
 public class Power : MonoBehaviour
 {
-    public float baseDamage = 25;
-    public float baseSpeed = 6f;
+    public float baseDamage = 5;
+    public float baseSpeed = 3f;
     public float deltaDamage = 1.7f;
 
     private float damage;

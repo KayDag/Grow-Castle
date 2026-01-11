@@ -171,7 +171,7 @@ public class UIManager : MonoBehaviour
     }
     public void CheckPointNextWave()
     {
-        checkpointsInNextWave.text = ManagerGame.Instance.checkPoint[ManagerGame.Instance.currentWave].ToString();
+        checkpointsInNextWave.text = ManagerGame.Instance.count.ToString() + "/" + ManagerGame.Instance.checkPoint[ManagerGame.Instance.currentWave].ToString();
     }
     //BuyScout
     public void BuyScout()

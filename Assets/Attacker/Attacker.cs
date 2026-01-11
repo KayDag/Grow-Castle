@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class Attacker : MonoBehaviour
 {
-    public float damage = 8;
-    public float baseDamage = 8;
+    public float damage = 5;
+    public float baseDamage = 5;
     public float health = 140;
     public float baseHealth = 140;
-    public float speed = 3.2f;
-    public float baseSpeed = 3.2f;
+    public float speed = 1.5f;
+    public float baseSpeed = 1.5f;
     public float cooldown = 2f;
 
     private float timer;
@@ -132,8 +132,7 @@ public class Attacker : MonoBehaviour
         isAttacking = false;
         enemy = null;
         ManagerGame.Instance.OnAttackerReachCheckpoint(this);
-        AttackerManager.Instance.MarkReturnHome(this);
-        gameObject.SetActive(false);
+        Die();
     }
     public void SetIndex(int i)
     {
