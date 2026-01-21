@@ -138,24 +138,16 @@ public class DefenderManager : MonoBehaviour
     }
     public void BuyBomber()
     {
-        int gold = baseGold + ((int)ManagerGame.Instance.stats.defender - 1) * 25;
-        if (ManagerGame.Instance.stats.gold >= gold && def != null)
-        {
-            for (int i = 0; i < point.Count; i++)
-            {
-                if (!check[i] && point[i] != null)
-                {
-                    // instantiate tại vị trí point[i]
-                    Defender newDef = Instantiate(def, point[i].position, Quaternion.identity);
-                    defenders.Add(newDef);
+        int gold = baseGold + ((int)ManagerGame.Instance.stats.defender - 1) * 10;
+        if (ManagerGame.Instance.stats.gold < gold) return;
+        if (defenders.Count >= point.Count) return;
 
-                    // đánh dấu đã spawn 
-                    check[i] = true;
-                    ManagerGame.Instance.stats.gold -= gold;
-                    return;
-                }
-            }
-        }
+        int index = defenders.Count;
+
+        Defender newDef = Instantiate(def, point[index].position, Quaternion.identity);
+        defenders.Add(newDef);
+
+        ManagerGame.Instance.stats.gold -= gold;
     }
     public bool FullDefender()
     {

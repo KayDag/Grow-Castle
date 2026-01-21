@@ -13,7 +13,7 @@ public class Progress6 : MonoBehaviour, IProgress
     private int spawnEnemy1 = 18;
 
     public GameObject enemy2;
-    private int spawnEnemy2 = 10;
+    private int spawnEnemy2 = 12;
 
     public GameObject boss;
     private int spawnBoss = 1;
@@ -51,10 +51,10 @@ public class Progress6 : MonoBehaviour, IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // Phase 1 – spam lính nhanh (20s)
-        for (int i = 0; i < 8; i++)
+        // Phase 1 – spam lính nhanh (20s) // 22
+        for (int i = 0; i < 11; i++)
         {
-            for (int j = 0; j < 5 && spawnIndex < spawnEnemy; j++)
+            for (int j = 0; j < 2 && spawnIndex < spawnEnemy; j++)
             {
                 Spawn(enemy, x, yMin, yMax);
                 spawnIndex++;
@@ -63,25 +63,28 @@ public class Progress6 : MonoBehaviour, IProgress
             yield return new WaitForSeconds(2.5f);
         }
 
-        // Phase 2 – elite & heavy dồn dập (30s)
-        for (int i = 0; i < 10; i++)
+        // Phase 2 – elite & heavy dồn dập (30s) //48
+
+        for (int i = 0; i < 6; i++) 
         {
             if (spawnIndex1 < spawnEnemy1)
             {
-                Spawn(enemy1, x, yMin, yMax);
-                spawnIndex1++;
+                for (int j = 0; j < 3; j++)
+                {
+                    Spawn(enemy, x, yMin, yMax);
+                    spawnIndex++;
+                    Spawn(enemy1, x, yMin, yMax);
+                    spawnIndex1++;
+                }
             }
 
             if (spawnIndex2 < spawnEnemy2)
             {
-                Spawn(enemy2, x, yMin, yMax);
-                spawnIndex2++;
-            }
-
-            for (int j = 0; j < 3 && spawnIndex < spawnEnemy; j++)
-            {
-                Spawn(enemy, x, yMin, yMax);
-                spawnIndex++;
+                for (int j = 0; j < 2; j++)
+                {
+                    Spawn(enemy2, x, yMin, yMax);
+                    spawnIndex2++;
+                }
             }
 
             yield return new WaitForSeconds(3f);

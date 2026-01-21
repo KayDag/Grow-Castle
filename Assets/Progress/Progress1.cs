@@ -9,7 +9,7 @@ public class Progess1 : MonoBehaviour, IProgress
     public GameObject enemy;
     private int spawnEnemy = 15;
 
-    public Transform pointA, pointB;          
+    public Transform pointA, pointB;
 
     private int spawnIndex = 0;
     private Coroutine spawnCoroutine;

@@ -75,9 +75,8 @@ public class ManagerGame : MonoBehaviour
             EnterWave();
         }
 
-        if ((waves[currentWave].IsDone() && aliveScouts == 0) || Castle.Instance.health <= 0)
+        if ((waves[currentWave].IsDone() && aliveScouts <= 0) || Castle.Instance.health <= 0)
         {
-            isGame = false;
             isWaveStarted = false;
             waitingForPlayer = true;
             DefenderManager.Instance.DestroyBall();
@@ -110,15 +109,23 @@ public class ManagerGame : MonoBehaviour
     {
         if (currentWave >= checkPoint.Count)
             return;
+        isGame = false;
         isEndWave = true;
         waves[currentWave].StopWave();
         //Thắng
         if (count >= checkPoint[currentWave] && Castle.Instance.health > 0)
         {
-            UIManager.Instance.WinGame();
             currentWave++;
             count = 0;
             stats.gold += 50 + currentWave * 25;
+            if (currentWave >= waves.Count)
+            {
+                UIManager.Instance.Victory();
+            }
+            else
+            {
+                UIManager.Instance.WinGame();
+            }
         }
         //Thua
         else if (Castle.Instance.health <= 0)

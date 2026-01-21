@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     public Canvas homeCanvas;
     public Canvas pauseCanvas;
     public Canvas winCanvas;
+    public Canvas vicCanvas;
     public Canvas loseCanvas;
     public Canvas statsCanvas;
     public Canvas defaultCanvas;
@@ -136,7 +137,7 @@ public class UIManager : MonoBehaviour
         goldAttacker.text = (AttackerManager.Instance.baseGold + 
             ((int)ManagerGame.Instance.stats.attacker - 1) * 5).ToString();
         goldDefender.text = (DefenderManager.Instance.baseGold +
-            ((int)ManagerGame.Instance.stats.defender - 1) * 5).ToString();
+            ((int)ManagerGame.Instance.stats.defender - 1) * 10).ToString();
     }
     //scouts
     public void Scouts()
@@ -160,15 +161,14 @@ public class UIManager : MonoBehaviour
     public void OpenStats()
     {
         playerStatsCanvas.gameObject.SetActive(true);
-        hp.text = ManagerGame.Instance.stats.castle.ToString();
-        speed.text = ManagerGame.Instance.stats.attacker.ToString();
-        damage.text = ManagerGame.Instance.stats.defender.ToString();
-        cooldownBooster.text = ManagerGame.Instance.stats.booster.ToString();
+        previewStats = ManagerGame.Instance.stats.Clone();
+        UpdateUI(hp, speed, damage, cooldownBooster);
         AudioManager.Instance.PlayClick();
     }
     //Play Game
     public void PlayGame()
     {
+        if (ManagerGame.Instance.currentWave >= ManagerGame.Instance.checkPoint.Count) return;
         homeCanvas.gameObject.SetActive(false);
         ManagerGame.Instance.isGame = true;
         ManagerGame.Instance.waitingForPlayer = false;
@@ -178,7 +178,14 @@ public class UIManager : MonoBehaviour
     }
     public void CheckPointNextWave()
     {
-        checkpointsInNextWave.text = ManagerGame.Instance.count.ToString() + "/" + ManagerGame.Instance.checkPoint[ManagerGame.Instance.currentWave].ToString();
+        if (ManagerGame.Instance.currentWave < ManagerGame.Instance.checkPoint.Count)
+        {
+            checkpointsInNextWave.text = ManagerGame.Instance.count.ToString() + "/" + ManagerGame.Instance.checkPoint[ManagerGame.Instance.currentWave].ToString();
+        }
+        else
+        {
+            checkpointsInNextWave.text = "--";
+        }
     }
     //BuyScout
     public void BuyScout()
@@ -290,6 +297,19 @@ public class UIManager : MonoBehaviour
         canReward = false;
         StartCoroutine(DelayReward());
     }
+    public void Victory()
+    {
+        defaultCanvas.gameObject.SetActive(false);
+        gameCanvas.gameObject.SetActive(false);
+        vicCanvas.gameObject.SetActive(true);
+        AudioManager.Instance.PlayWin();
+        canReward = false;
+        StartCoroutine(DelayReward());
+    }
+    public void BackHomeWhenVictory()
+    {
+        BackHome();
+    }
     private IEnumerator DelayReward()
     {
         yield return new WaitForSeconds(3f);
@@ -309,51 +329,51 @@ public class UIManager : MonoBehaviour
         previewStats = ManagerGame.Instance.stats.Clone();
         int wave = ManagerGame.Instance.currentWave;
         score = ManagerGame.Instance.scoreAdd[wave - 1];
-        UpdateUI();
+        UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
     }
 
     //Add HP
     public void AddHP()
     {
         AudioManager.Instance.PlayClick();
-        if (score > 0)
+        if (score > 0 && previewStats.castle < previewStats.castleMax)
         {
             previewStats.castle++;
             score--;
-            UpdateUI();
+            UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
         }
     }
     //Add Speed Attacker
     public void AddSpeed()
     {
         AudioManager.Instance.PlayClick();
-        if (score > 0)
+        if (score > 0 && previewStats.attacker < previewStats.attackerMax)
         {
             previewStats.attacker++;
             score--;
-            UpdateUI();
+            UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
         }
     }
     //Add Damage Defender
     public void AddDamage()
     {
         AudioManager.Instance.PlayClick();
-        if (score > 0)
+        if (score > 0 && previewStats.defender < previewStats.defenderMax)
         {
             previewStats.defender++;
             score--;
-            UpdateUI();
+            UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
         }
     }
     //Add cooldown booster
     public void AddCoolDown()
     {
         AudioManager.Instance.PlayClick();
-        if (score > 0)
+        if (score > 0 && previewStats.booster < previewStats.boosterMax)
         {
             previewStats.booster++;
             score--;
-            UpdateUI();
+            UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
         }
     }
     //Complete
@@ -377,12 +397,40 @@ public class UIManager : MonoBehaviour
         AudioManager.Instance.PlayClick();
         OpenUpdateStats();
     }
-    private void UpdateUI()
+    private void UpdateUI(TextMeshProUGUI hpU, TextMeshProUGUI speedU, TextMeshProUGUI damageU, TextMeshProUGUI cooldownBoosterU)
     {
-        hpU.text = previewStats.castle.ToString();
-        speedU.text = previewStats.attacker.ToString();
-        damageU.text = previewStats.defender.ToString();
-        cooldownBoosterU.text = previewStats.booster.ToString();
+        if (previewStats.castle < previewStats.castleMax)
+        {
+            hpU.text = previewStats.castle.ToString();
+        }
+        else
+        {
+            hpU.text = "Max";
+        }
+        if (previewStats.attacker < previewStats.attackerMax)
+        {
+            speedU.text = previewStats.attacker.ToString();
+        }
+        else
+        {
+            speedU.text = "Max";
+        }
+        if (previewStats.defender < previewStats.defenderMax)
+        {
+            damageU.text = previewStats.defender.ToString();
+        }
+        else
+        {
+            damageU.text = "Max";
+        }
+        if (previewStats.booster < previewStats.boosterMax)
+        {
+            cooldownBoosterU.text = previewStats.booster.ToString();
+        }
+        else
+        {
+            cooldownBoosterU.text = "Max";
+        }
         scoreText.text = "Score: " + score.ToString();
     }
 }

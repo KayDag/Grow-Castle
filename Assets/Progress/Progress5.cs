@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Progress5 : MonoBehaviour,  IProgress
@@ -13,12 +14,13 @@ public class Progress5 : MonoBehaviour,  IProgress
     private int spawnEnemy1 = 15;
 
     public GameObject enemy2;
-    private int spawnEnemy2 = 8;
+    private int spawnEnemy2 = 5;
 
     public GameObject boss;
     private int spawnBoss = 1;
 
     public Transform pointA, pointB;
+    public bool check = false;
 
     private int spawnIndex = 0;
     private int spawnIndex1 = 0;
@@ -51,7 +53,7 @@ public class Progress5 : MonoBehaviour,  IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // dồn lính (20s)
+        // dồn lính (20s) //35
         for (int i = 0; i < 7; i++)
         {
             // 5 enemy thường
@@ -61,16 +63,19 @@ public class Progress5 : MonoBehaviour,  IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
         }
 
-        // enemy1 xuất hiện (24s)
-        for (int i = 0; i < 6; i++)
+        // enemy1 và enemy2 xuất hiện (24s) //20
+        for (int i = 0; i < 5; i++)
         {
             if (spawnIndex1 < spawnEnemy1)
             {
-                Spawn(enemy1, x, yMin, yMax);
-                spawnIndex1++;
+                for (int j = 0; j < 3; j++)
+                {
+                    Spawn(enemy1, x, yMin, yMax);
+                    spawnIndex1++;
+                }
             }
 
             if (spawnIndex2 < spawnEnemy2)
@@ -79,14 +84,7 @@ public class Progress5 : MonoBehaviour,  IProgress
                 spawnIndex2++;
             }
 
-            // thêm 2 enemy thường
-            for (int j = 0; j < 2 && spawnIndex < spawnEnemy; j++)
-            {
-                Spawn(enemy, x, yMin, yMax);
-                spawnIndex++;
-            }
-
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(3f);
         }
         while (ManagerGame.Instance.aliveEnemies.Count > 0)
             yield return null;

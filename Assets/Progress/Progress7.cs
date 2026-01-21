@@ -51,8 +51,8 @@ public class Progress7 : MonoBehaviour, IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // Phase 1 – spam quân ồ ạt (20s)
-        for (int i = 0; i < 9; i++)
+        // Phase 1 – spam quân ồ ạt (20s) // 45
+        for (int i = 0; i < 9; i++) 
         {
             for (int j = 0; j < 5 && spawnIndex < spawnEnemy; j++)
             {
@@ -63,30 +63,25 @@ public class Progress7 : MonoBehaviour, IProgress
             yield return new WaitForSeconds(2.2f);
         }
 
-        for (int i = 0; i < 11; i++)
+        for (int i = 0; i < 11; i++) //44 + 1 boss
         {
             if (spawnIndex1 < spawnEnemy1)
             {
                 Spawn(enemy1, x, yMin, yMax);
-                spawnIndex1++;
+                Spawn(enemy1, x, yMin, yMax);
+                spawnIndex1 += 2;
             }
 
             if (spawnIndex2 < spawnEnemy2)
             {
                 Spawn(enemy2, x, yMin, yMax);
-                spawnIndex2++;
-            }
-
-            for (int j = 0; j < 3 && spawnIndex < spawnEnemy; j++)
-            {
-                Spawn(enemy, x, yMin, yMax);
-                spawnIndex++;
+                Spawn(enemy2, x, yMin, yMax);
+                spawnIndex2 += 2;
             }
 
             // Boss 1 xuất hiện ở lượt thứ 4
             if (i == 3 && spawnIndexBoss < spawnBoss)
             {
-                // 🔥 CHỜ QUÉT SẠCH QUÁI TRƯỚC KHI GỌI BOSS
                 while (ManagerGame.Instance.aliveEnemies.Count > 0)
                     yield return null;
 

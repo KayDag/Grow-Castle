@@ -9,27 +9,45 @@ public class Power : MonoBehaviour
     private float damage;
     private float speed;
 
+    private Enemy target;
     private Vector3 moveDir;
-    private bool isLocked = false;
+    private bool hadTarget = false; 
 
     void Start()
     {
-        LockTargetDirection();
+        LockTargetOrForward();
     }
 
     void Update()
     {
-        transform.position += moveDir * speed * Time.deltaTime;
+        // Đã từng có target
+        if (hadTarget)
+        {
+            // Target chết giữa chừng 
+            if (target == null || !target.gameObject.activeInHierarchy)
+            {
+                Destroy(gameObject);
+                return;
+            }
 
-        // tự hủy khi ra khỏi màn hình
-        Vector3 view = Camera.main.WorldToViewportPoint(transform.position);
-        if (view.x < -0.1f || view.x > 1.1f || view.y < -0.1f || view.y > 1.1f)
-            Destroy(gameObject);
+            // Target còn sống
+            moveDir = (target.transform.position - transform.position).normalized;
+            transform.position += moveDir * speed * Time.deltaTime;
+            transform.right = moveDir;
+        }
+        else
+        {
+            // Chưa từng có target 
+            transform.position += moveDir * speed * Time.deltaTime;
+
+            Vector3 view = Camera.main.WorldToViewportPoint(transform.position);
+            if (view.x < -0.1f || view.x > 1.1f || view.y < -0.1f || view.y > 1.1f)
+                Destroy(gameObject);
+        }
     }
 
-    void LockTargetDirection()
+    void LockTargetOrForward()
     {
-        Enemy closest = null;
         float minDist = float.MaxValue;
 
         foreach (var e in ManagerGame.Instance.aliveEnemies)
@@ -40,18 +58,23 @@ public class Power : MonoBehaviour
             if (d < minDist)
             {
                 minDist = d;
-                closest = e;
+                target = e;
             }
         }
 
-        if (closest != null)
-            moveDir = (closest.transform.position - transform.position).normalized;
+        if (target != null)
+        {
+            hadTarget = true;
+            moveDir = (target.transform.position - transform.position).normalized;
+        }
         else
-            moveDir = Vector3.right; // không có mục tiêu thì bắn thẳng
+        {
+            moveDir = Vector3.right; 
+        }
 
         transform.right = moveDir;
-        isLocked = true;
     }
+
 
     void OnTriggerEnter2D(Collider2D other)
     {

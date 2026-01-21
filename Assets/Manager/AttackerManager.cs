@@ -53,22 +53,18 @@ public class AttackerManager : MonoBehaviour
 
     public void AddAttacker()
     {
-        int gold = baseGold + ((int)ManagerGame.Instance.stats.attacker - 1) * 20;
-        if (ManagerGame.Instance.stats.gold >= gold && attPrefab != null)
-        {
-            for (int i = 0; i < point.Count; i++)
-            {
-                if (!check[i] && point[i] != null)
-                {
-                    Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
-                    newAtt.SetIndex(i);
-                    Register(newAtt, i);
-                    ManagerGame.Instance.aliveScouts++;
-                    ManagerGame.Instance.stats.gold -= gold;
-                    return;
-                }
-            }
-        }
+        int gold = baseGold + ((int)ManagerGame.Instance.stats.attacker - 1) * 5;
+        if (ManagerGame.Instance.stats.gold < gold) return;
+        if (attacker.Count >= point.Count) return;
+
+        int index = attacker.Count;
+
+        Attacker newAtt = Instantiate(attPrefab, point[index].position, Quaternion.identity);
+        newAtt.SetIndex(index);
+        attacker.Add(newAtt);
+
+        ManagerGame.Instance.aliveScouts++;
+        ManagerGame.Instance.stats.gold -= gold;
     }
 
     public void Register(Attacker att, int index)
