@@ -20,7 +20,9 @@ public class Attacker : MonoBehaviour
     private Enemy enemy;
 
     private bool reachedCheckpoint = false;
+
     private Animator animator;
+    public GameObject vfxReachCheckPoint;
 
     private int index = -1;
 
@@ -127,7 +129,13 @@ public class Attacker : MonoBehaviour
     void ReachCheckpoint()
     {
         if (reachedCheckpoint) return;
+
         AudioManager.Instance.PlayReachCheckPoint();
+        if (vfxReachCheckPoint != null)
+        {
+            Instantiate(vfxReachCheckPoint, transform.position, Quaternion.identity);
+        }
+
         reachedCheckpoint = true;
         isAttacking = false;
         enemy = null;

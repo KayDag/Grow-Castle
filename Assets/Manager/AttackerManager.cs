@@ -13,7 +13,7 @@ public class AttackerManager : MonoBehaviour
     private HashSet<Attacker> homeAttackers = new HashSet<Attacker>();
     public Attacker attPrefab;    
 
-    public int baseGold = 35;
+    public int baseGold = 25;
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class AttackerManager : MonoBehaviour
         for (int i = 0; i < point.Count; i++)
             check.Add(false);
 
-        baseGold = 35;
+        baseGold = 25;
 
         int startCount = Mathf.Min(5, point.Count);
         for (int i = 0; i < startCount; i++)

@@ -13,7 +13,7 @@ public class DefenderManager : MonoBehaviour
     public Defender def;
     public List<GameObject> ball;
 
-    public int baseGold = 50;
+    public int baseGold = 35;
 
     public float cooldown = 18f;
     public float timerCooldown;
@@ -33,6 +33,9 @@ public class DefenderManager : MonoBehaviour
     private Color colorButton;
     private Color colorBooster;
 
+    public GameObject vfxUseBooster;
+    public Transform vfxTransform;
+
     private void Awake()
     {
         if (Instance == null)
@@ -48,7 +51,7 @@ public class DefenderManager : MonoBehaviour
     {
         timerCooldown = cooldown;
         isBooster = true;
-        baseGold = 50;
+        baseGold = 35;
 
         for (int i = 0; i < point.Count; i++)
         {
@@ -113,6 +116,12 @@ public class DefenderManager : MonoBehaviour
     public void UseBooster()
     {
         if (!isBooster) return;
+
+        AudioManager.Instance.PlayUseBooster();
+        if (vfxUseBooster != null)
+        {
+            Instantiate(vfxUseBooster, vfxTransform.position, Quaternion.identity);
+        }
 
         isUseBooster = true;
         timerBooster = 0f;

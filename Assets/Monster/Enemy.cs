@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     protected Attacker targetAttacker;
     protected Animator animator;
 
+    public GameObject vfxDie;
     protected void Awake()
     {
         animator = GetComponent<Animator>();
@@ -115,7 +116,12 @@ public class Enemy : MonoBehaviour
     protected void Die()
     {
         AudioManager.Instance.PlayCollectGold();
+        if (vfxDie != null)
+        {
+            Instantiate(vfxDie, transform.position, Quaternion.identity);
+        }
         PlayAnim(KeyAnimator.die);
+
         if (Progess1.Instance != null)
             Progess1.Instance.RemoveEnemy(this);
         ManagerGame.Instance.stats.gold += goldDrop;

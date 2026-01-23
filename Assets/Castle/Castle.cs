@@ -46,4 +46,5 @@ public class Castle : MonoBehaviour
             Debug.Log("Lose game");
         }
     }
+
 }

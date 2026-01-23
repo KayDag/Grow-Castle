@@ -434,6 +434,7 @@ MonoBehaviour:
   speed: 1
   baseSpeed: 1
   cooldown: 2
+  vfxReachCheckPoint: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
 --- !u!50 &5693589300457908953
 Rigidbody2D:
   serializedVersion: 4

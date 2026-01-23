@@ -9,11 +9,13 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource sfxSource;
     public AudioSource musicSource;
-    public float musicVolume = 0.4f;
-    public float sfxVolume = 0.7f;
+    public float musicVolume = 0.2f;
+    public float sfxVolume = 0.5f;
 
     public AudioClip checkpoint;
     public AudioClip collectGold;
+    public AudioClip shoot;
+    public AudioClip booster;
     public AudioClip click;
     public AudioClip win;
     public AudioClip lose;
@@ -42,7 +44,7 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayCollectGold()
     {
-        sfxSource.PlayOneShot(collectGold);
+        sfxSource.PlayOneShot(collectGold, 0.3f);
     }
     public void PlayReachCheckPoint()
     {
@@ -50,10 +52,20 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayWin()
     {
-        sfxSource.PlayOneShot(win);
+        sfxSource.PlayOneShot(win, 0.7f);
     }
     public void PlayLose()
     {
-        sfxSource.PlayOneShot(lose);
+        sfxSource.PlayOneShot(lose, 0.7f);
+    }
+    public void PlayShoot()
+    {
+        sfxSource.pitch = Random.Range(0.92f, 1.03f); 
+        sfxSource.PlayOneShot(shoot, 0.18f);         
+        sfxSource.pitch = 1f;
+    }
+    public void PlayUseBooster()
+    {
+        sfxSource.PlayOneShot(booster);
     }
 }

@@ -900,6 +900,7 @@ MonoBehaviour:
   speedMove: 1.2
   cooldown: 3
   goldDrop: 20
+  vfxDie: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
 --- !u!1 &8720533764174087087
 GameObject:
   m_ObjectHideFlags: 0
