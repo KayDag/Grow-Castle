@@ -9,6 +9,9 @@ public class ManagerGame : MonoBehaviour
     public static ManagerGame Instance;
 
     public PlayerStatsManager stats;
+    public int scout;
+    public int bomber;
+    public PlayerSaveDatas playerSaveDatas;
     private PlayerStatsManager waveStartStats;
     private float waveStartGold;
     private int waveStartCount;
@@ -18,7 +21,7 @@ public class ManagerGame : MonoBehaviour
     private List<IProgress> waves = new List<IProgress>();
     public int currentWave = 0;
 
-    public List<int> checkPoint = new List<int>() { 3, 4, 5, 7, 9, 12, 15 };
+    public List<int> checkPoint = new List<int>() { 4, 5, 7, 9, 11, 14, 17 };
     public int count = 0;
 
     public List<int> scoreAdd = new List<int>() { 2, 3, 3, 4, 4, 5 };
@@ -49,19 +52,41 @@ public class ManagerGame : MonoBehaviour
             if (p != null)
                 waves.Add(p);
         }
+        if (PlayerPrefs.HasKey(KeyDataPlayer.SaveGame))
+        {
+            string jsonData = PlayerPrefs.GetString(KeyDataPlayer.SaveGame);
+            playerSaveDatas = JsonUtility.FromJson<PlayerSaveDatas>(jsonData);
+            if (playerSaveDatas != null)
+            {
+                stats.gold = playerSaveDatas.gold;
+                stats.attacker = playerSaveDatas.statsScout;
+                stats.defender = playerSaveDatas.statsBomber;
+                stats.castle = playerSaveDatas.statsCastle;
+                stats.booster = playerSaveDatas.statsBooster;
+                scout = playerSaveDatas.scout;
+                bomber = playerSaveDatas.bomber;
+                currentWave = playerSaveDatas.wave;
+                count = playerSaveDatas.checkPoint;
+            }
+        }
+        else
+        {
+            playerSaveDatas = new PlayerSaveDatas();
+            stats.gold = playerSaveDatas.gold;
+            stats.attacker = playerSaveDatas.statsScout;
+            stats.defender = playerSaveDatas.statsBomber;
+            stats.castle = playerSaveDatas.statsCastle;
+            stats.booster = playerSaveDatas.statsBooster;
+            scout = playerSaveDatas.scout;
+            bomber = playerSaveDatas.bomber;
+            currentWave = playerSaveDatas.wave;
+            count = playerSaveDatas.checkPoint;
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
-        stats = new PlayerStatsManager();
-        stats.castle = 1;
-        stats.attacker = 1;
-        stats.defender = 1;
-        stats.booster = 1;
-        stats.gold = 50;
-
-        currentWave = 0;
-        count = 0;
+        UpdateStats();
     }
 
     // Update is called once per frame
@@ -186,5 +211,12 @@ public class ManagerGame : MonoBehaviour
         foreach (var e in aliveEnemies)
             if (e != null) Destroy(e.gameObject);
         aliveEnemies.Clear();
+    }
+    public void UpdateData()
+    {
+        playerSaveDatas.UpdateStats(currentWave, scout, bomber, count, stats);
+        string json = JsonUtility.ToJson(playerSaveDatas);
+        PlayerPrefs.SetString(KeyDataPlayer.SaveGame, json);
+        PlayerPrefs.Save();
     }
 }

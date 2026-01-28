@@ -198,6 +198,7 @@ public class UIManager : MonoBehaviour
         else
         {
             AttackerManager.Instance.AddAttacker();
+            ManagerGame.Instance.UpdateData();
         }
         Scouts();
     }
@@ -212,6 +213,7 @@ public class UIManager : MonoBehaviour
         else
         {
             DefenderManager.Instance.BuyBomber();
+            ManagerGame.Instance.UpdateData();
         }
     }
 
@@ -285,6 +287,7 @@ public class UIManager : MonoBehaviour
         Scouts();
         AttackerManager.Instance.NewWave();
         CheckPointNextWave();
+        ManagerGame.Instance.UpdateData();
     }
 
     //Win game

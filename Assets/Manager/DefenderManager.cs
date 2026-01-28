@@ -57,9 +57,13 @@ public class DefenderManager : MonoBehaviour
         {
             check.Add(false);
         }
-        Defender newDef = Instantiate(def, point[0].position, Quaternion.identity);
-        defenders.Add(newDef);
-        check[0] = true;
+        int startCount = Mathf.Min(ManagerGame.Instance.bomber, point.Count);
+        for (int i = 0; i < startCount; i++)
+        {
+            Defender newDef = Instantiate(def, point[i].position, Quaternion.identity);
+            defenders.Add(newDef);
+            check[i] = true;
+        }
 
         cooldown = 18f;
         timeUse = 3f;
@@ -156,6 +160,7 @@ public class DefenderManager : MonoBehaviour
         Defender newDef = Instantiate(def, point[index].position, Quaternion.identity);
         defenders.Add(newDef);
 
+        ManagerGame.Instance.bomber++;
         ManagerGame.Instance.stats.gold -= gold;
     }
     public bool FullDefender()

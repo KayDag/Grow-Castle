@@ -35,7 +35,7 @@ public class AttackerManager : MonoBehaviour
 
         baseGold = 25;
 
-        int startCount = Mathf.Min(5, point.Count);
+        int startCount = Mathf.Min(ManagerGame.Instance.scout, point.Count);
         for (int i = 0; i < startCount; i++)
         {
             Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
@@ -65,6 +65,7 @@ public class AttackerManager : MonoBehaviour
 
         ManagerGame.Instance.aliveScouts++;
         ManagerGame.Instance.stats.gold -= gold;
+        ManagerGame.Instance.scout++;
     }
 
     public void Register(Attacker att, int index)
@@ -129,7 +130,7 @@ public class AttackerManager : MonoBehaviour
             check[i] = false;
 
         // Spawn lại scout ban đầu
-        for (int i = 0; i < startAtt; i++)
+        for (int i = 0; i < ManagerGame.Instance.scout; i++)
         {
             Attacker newAtt = Instantiate(attPrefab, point[i].position, Quaternion.identity);
             newAtt.SetIndex(i);
