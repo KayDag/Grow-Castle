@@ -9,8 +9,11 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource sfxSource;
     public AudioSource musicSource;
-    public float musicVolume = 0.2f;
-    public float sfxVolume = 0.5f;
+
+    public float maxMusicVolume = 0.2f;
+    public float maxSfxVolume = 0.5f;
+    public float musicVolume = 1f; 
+    public float sfxVolume = 1f;
 
     public AudioClip checkpoint;
     public AudioClip collectGold;
@@ -31,11 +34,48 @@ public class AudioManager : MonoBehaviour
     }
     void Start()
     {
+        musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1);
+        sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1);
         musicSource.clip = bgm;
         musicSource.loop = true;
         musicSource.Play();
-        musicSource.volume = musicVolume;
-        sfxSource.volume = sfxVolume;
+
+        musicSource.volume = maxMusicVolume;
+        sfxSource.volume = maxSfxVolume;
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        musicVolume = value;
+
+        if (musicVolume == 0)
+        {
+            UIManager.Instance.SetMusic(false);
+        }
+        else
+        {
+            UIManager.Instance.SetMusic(true);
+        }
+
+        musicSource.volume = value * maxMusicVolume;
+        PlayerPrefs.SetFloat("MusicVolume", value);
+    }
+
+    public void SetSFXVolume(float value)
+    {
+        sfxVolume = value;
+
+        if (sfxVolume == 0)
+        {
+            UIManager.Instance.SetSound(false);
+        }
+        else
+        {
+            UIManager.Instance.SetSound(true);
+        }
+
+        sfxSource.volume = value * maxSfxVolume;
+        PlayerPrefs.SetFloat("SFXVolume", value);
     }
 
     public void PlayClick()
@@ -68,4 +108,5 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.PlayOneShot(booster);
     }
+
 }

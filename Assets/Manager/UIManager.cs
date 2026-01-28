@@ -5,6 +5,7 @@ using TMPro;
 using System.Threading;
 using UnityEngine.SocialPlatforms;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,6 +19,13 @@ public class UIManager : MonoBehaviour
     public GameObject checkpoint;
     private Vector3 originalScaleCheckPoint;
 
+    public Slider musicSlider;
+    public Slider sfxSlider;
+    public GameObject music;
+    public GameObject nomusic;
+    public GameObject sound;
+    public GameObject nosound;
+
     public Canvas playerStatsCanvas;
     public Canvas gameCanvas;
     public Canvas homeCanvas;
@@ -27,6 +35,7 @@ public class UIManager : MonoBehaviour
     public Canvas loseCanvas;
     public Canvas statsCanvas;
     public Canvas defaultCanvas;
+    public Canvas volumeCanvas;
 
     public TextMeshProUGUI hp;
     public TextMeshProUGUI hpU;
@@ -79,12 +88,19 @@ public class UIManager : MonoBehaviour
         winCanvas.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(false);
         pauseCanvas.gameObject.SetActive(false);
+        volumeCanvas.gameObject.SetActive(false);
 
         previewStats = new PlayerStatsManager();
         Buy();
         Progress();
         AttackerManager.Instance.NewWave();
         CheckPointNextWave();
+
+        musicSlider.value = AudioManager.Instance.musicVolume;
+        sfxSlider.value = AudioManager.Instance.sfxVolume;
+
+        musicSlider.onValueChanged.AddListener(AudioManager.Instance.SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
     }
 
     // Update is called once per frame
@@ -216,6 +232,49 @@ public class UIManager : MonoBehaviour
             ManagerGame.Instance.UpdateData();
         }
     }
+    public void Setting()
+    {
+        AudioManager.Instance.PlayClick();
+
+        homeCanvas.gameObject.SetActive(false);
+        volumeCanvas.gameObject.SetActive(true);
+    }
+
+    //Setting
+    public void Exit()
+    {
+        AudioManager.Instance.PlayClick();
+
+        volumeCanvas.gameObject.SetActive(false);
+        homeCanvas.gameObject.SetActive(true);
+    }
+    public void SetMusic(bool check)
+    {
+        if (check == true) //music volume = 0
+        {
+            nomusic.gameObject.SetActive(true);
+            music.gameObject.SetActive(false);
+        }
+        else
+        {
+            music.gameObject.SetActive(true);
+            nomusic.gameObject.SetActive(false);
+        }
+    }
+    public void SetSound(bool check)
+    {
+        if (check == true) //sound volume = 0
+        {
+            nosound.gameObject.SetActive(true);
+            sound.gameObject.SetActive(false);
+        }
+        else
+        {
+            sound.gameObject.SetActive(true);
+            nosound.gameObject.SetActive(false);
+        }
+    }
+
 
     //Game Canvas
     //Pause Game
