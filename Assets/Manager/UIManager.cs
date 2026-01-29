@@ -370,6 +370,7 @@ public class UIManager : MonoBehaviour
     }
     public void BackHomeWhenVictory()
     {
+        vicCanvas.gameObject.SetActive(false);
         BackHome();
     }
     private IEnumerator DelayReward()

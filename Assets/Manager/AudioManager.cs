@@ -42,19 +42,37 @@ public class AudioManager : MonoBehaviour
 
         musicSource.volume = maxMusicVolume;
         sfxSource.volume = maxSfxVolume;
+
+        if (sfxVolume <= 0.001f)
+        {
+            UIManager.Instance.SetSound(true);
+        }
+        else
+        {
+            UIManager.Instance.SetSound(false);
+        }
+
+        if (musicVolume <= 0.001f)
+        {
+            UIManager.Instance.SetMusic(true);
+        }
+        else
+        {
+            UIManager.Instance.SetMusic(false);
+        }
     }
 
     public void SetMusicVolume(float value)
     {
         musicVolume = value;
 
-        if (musicVolume == 0)
+        if (musicVolume <= 0.001f)
         {
-            UIManager.Instance.SetMusic(false);
+            UIManager.Instance.SetMusic(true);
         }
         else
         {
-            UIManager.Instance.SetMusic(true);
+            UIManager.Instance.SetMusic(false);
         }
 
         musicSource.volume = value * maxMusicVolume;
@@ -65,13 +83,13 @@ public class AudioManager : MonoBehaviour
     {
         sfxVolume = value;
 
-        if (sfxVolume == 0)
+        if (sfxVolume <= 0.001f)
         {
-            UIManager.Instance.SetSound(false);
+            UIManager.Instance.SetSound(true);
         }
         else
         {
-            UIManager.Instance.SetSound(true);
+            UIManager.Instance.SetSound(false);
         }
 
         sfxSource.volume = value * maxSfxVolume;
