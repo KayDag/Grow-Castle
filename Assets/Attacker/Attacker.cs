@@ -40,21 +40,21 @@ public class Attacker : MonoBehaviour
     void Update()
     {
         if (!ManagerGame.Instance.isGame) return;
-        if (health <= 0) return;
 
-        if (isAttacking && enemy != null)
+        if (isAttacking && enemy != null && enemy.health > 0)
         {
             AttackEnemy();
         }
         else
         {
+            isAttacking = false;
+            animator.SetBool(KeyAnimator.attacking, false);
             Move();
         }
     }
 
     void Move()
     {
-        PlayAnim(KeyAnimator.walk);
         transform.position = Vector3.MoveTowards(
             transform.position,
             checkPoint,
@@ -67,7 +67,7 @@ public class Attacker : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= cooldown)
         {
-            PlayAnim(KeyAnimator.attack);
+            animator.SetTrigger(KeyAnimator.attack);
             enemy.TakeDamage((int)damage);
             timer = 0f;
         }
@@ -98,12 +98,14 @@ public class Attacker : MonoBehaviour
 
     void Die()
     {
-        PlayAnim(KeyAnimator.die);
+        animator.SetBool(KeyAnimator.die, true);
+        this.enabled = false; // TẮT Enemy script
+        GetComponent<Collider2D>().enabled = false;
 
         if (AttackerManager.Instance != null)
             AttackerManager.Instance.UnRegister(this);
 
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 1f);
     }
 
     void PlayAnim(string anim)
@@ -120,10 +122,21 @@ public class Attacker : MonoBehaviour
         {
             isAttacking = true;
             enemy = other.GetComponent<Enemy>();
+            animator.SetBool(KeyAnimator.attacking, true);
+            timer = 0f;
         }
         else if (other.CompareTag("CheckPoint"))
         {
             ReachCheckpoint();
+        }
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Monster"))
+        {
+            isAttacking = false;
+            enemy = null;
+            animator.SetBool(KeyAnimator.attacking, false);
         }
     }
     void ReachCheckpoint()

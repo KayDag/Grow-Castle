@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class KeyAnimator 
 {
-    public static string attack = "Attack";
+    public static string attack = "isAttack";
+    public static string attacking = "isAttacking";
     public static string walk = "Walk";
-    public static string die = "Death";
+    public static string die = "isDie";
     public static string idle = "Idle";
 }

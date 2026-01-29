@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class EnemyOnlyCastle : Enemy
@@ -8,7 +9,9 @@ public class EnemyOnlyCastle : Enemy
     {
         if (isAttackingCastle)
         {
-            PlayAnim(KeyAnimator.attack);
+            animator.SetBool(KeyAnimator.attacking, true);
+            animator.SetTrigger(KeyAnimator.attack);
+
             Castle.Instance.TakeDamage(damage);
             Castle.Instance.CheckLose();
         }
@@ -21,6 +24,7 @@ public class EnemyOnlyCastle : Enemy
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = true;
+            animator.SetBool(KeyAnimator.attacking, true);
         }
     }
 
@@ -29,6 +33,15 @@ public class EnemyOnlyCastle : Enemy
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = false;
+            StopAttack();
+        }
+    }
+
+    public override void StopAttack()
+    {
+        if (!isAttackingCastle)
+        {
+            animator.SetBool(KeyAnimator.attacking, false);
         }
     }
 }

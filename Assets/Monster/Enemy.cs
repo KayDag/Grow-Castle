@@ -36,8 +36,6 @@ public class Enemy : MonoBehaviour
         if (health <= 0) return;
         if (isAttackingCastle || isAttackingAttacker) return;
 
-        PlayAnim(KeyAnimator.walk);
-
         transform.position = Vector3.MoveTowards(
             transform.position,
             Castle.Instance.door.position,
@@ -59,7 +57,8 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Attack()
     {
-        PlayAnim(KeyAnimator.attack);
+        animator.SetBool(KeyAnimator.attacking, true);
+        animator.SetTrigger(KeyAnimator.attack);
 
         if (isAttackingCastle)
         {
@@ -78,11 +77,13 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = true;
+            animator.SetBool(KeyAnimator.attacking, true);
         }
         else if (other.CompareTag("Attacker"))
         {
             isAttackingAttacker = true;
             targetAttacker = other.GetComponent<Attacker>();
+            animator.SetBool(KeyAnimator.attacking, true);
         }
     }
 
@@ -91,10 +92,19 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = false;
+            StopAttack();
         }
         else if (other.CompareTag("Attacker"))
         {
             StopAttackAttacker();
+            StopAttack();
+        }
+    }
+    public virtual void StopAttack()
+    {
+        if (!isAttackingCastle && !isAttackingAttacker)
+        {
+            animator.SetBool(KeyAnimator.attacking, false);
         }
     }
 
@@ -120,12 +130,14 @@ public class Enemy : MonoBehaviour
         {
             Instantiate(vfxDie, transform.position, Quaternion.identity);
         }
-        PlayAnim(KeyAnimator.die);
+        animator.SetBool(KeyAnimator.die, true);
+        this.enabled = false; // TẮT Enemy script
+        GetComponent<Collider2D>().enabled = false;
 
         if (Progess1.Instance != null)
             Progess1.Instance.RemoveEnemy(this);
         ManagerGame.Instance.stats.gold += goldDrop;
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 1f);
     }
 
     protected void PlayAnim(string anim)
