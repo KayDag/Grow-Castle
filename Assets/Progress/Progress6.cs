@@ -60,7 +60,7 @@ public class Progress6 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(2f);
         }
 
         // Phase 2 – elite & heavy dồn dập (30s) //48
@@ -92,8 +92,6 @@ public class Progress6 : MonoBehaviour, IProgress
 
         // Phase 3 – nghỉ rất ngắn
         yield return new WaitForSeconds(2f);
-        while (ManagerGame.Instance.aliveEnemies.Count > 0)
-            yield return null;
 
         // Phase 4 – Boss xuất hiện khi vẫn còn quái lẻ
         if (spawnIndexBoss < spawnBoss)

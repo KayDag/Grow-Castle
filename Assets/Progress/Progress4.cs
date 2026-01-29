@@ -7,10 +7,10 @@ public class Progress4 : MonoBehaviour, IProgress
     public static Progress4 Instance;
 
     public GameObject enemy;
-    private int spawnEnemy = 30;
+    private int spawnEnemy = 36;
 
     public GameObject enemy1;
-    private int spawnEnemy1 = 12;
+    private int spawnEnemy1 = 16;
 
     public GameObject enemy2;
     private int spawnEnemy2 = 5;
@@ -53,10 +53,19 @@ public class Progress4 : MonoBehaviour, IProgress
             Spawn(enemy2, x, yMin, yMax);
             spawnIndex2++;
         }
-
-        //khi 2 enemy2 đầu tiên chết hết
-        while (ManagerGame.Instance.aliveEnemies.Count > 0)
-            yield return null;
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < 6 && spawnIndex < spawnEnemy; i++)
+        {
+            Spawn(enemy, x, yMin, yMax);
+            spawnIndex++;
+        }
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < 4 && spawnIndex1 < spawnEnemy1; i++)
+        {
+            Spawn(enemy1, x, yMin, yMax);
+            spawnIndex1++;
+        }
+        yield return new WaitForSeconds(2f);
 
         //chạy 3 wave lớn
         for (int w = 0; w < 3; w++)

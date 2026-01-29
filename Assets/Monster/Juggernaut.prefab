@@ -728,7 +728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 35
-  health: 2500
+  health: 2800
   speedMove: 1
   cooldown: 2
   goldDrop: 75

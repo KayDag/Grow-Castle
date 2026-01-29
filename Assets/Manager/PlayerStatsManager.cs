@@ -6,13 +6,13 @@ using UnityEngine;
 public class PlayerStatsManager
 {
     public float defender;
-    public float defenderMax = 7;
+    public float defenderMax = 6;
     public float attacker;
-    public float attackerMax = 6;
+    public float attackerMax = 5;
     public float castle;
-    public float castleMax = 7;
+    public float castleMax = 6;
     public float booster;
-    public float boosterMax = 5;
+    public float boosterMax = 4;
     public float gold;
 
     public PlayerStatsManager Clone()

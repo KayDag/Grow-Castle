@@ -29,7 +29,7 @@ public class Progess1 : MonoBehaviour, IProgress
         if (spawnCoroutine != null) return;
         spawnCoroutine = StartCoroutine(SpawnWave());
     }
-    //>= 9s
+    // >= 15s
     IEnumerator SpawnWave()
     {
         float x = pointA.position.x;
@@ -46,7 +46,7 @@ public class Progess1 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(5f); // ⭐ 3s sau mới spawn lượt tiếp
+            yield return new WaitForSeconds(3f); // 3s sau mới spawn lượt tiếp
         }
         spawnCoroutine = null;
     }

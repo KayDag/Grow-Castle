@@ -10,7 +10,7 @@ public class Progress2 : MonoBehaviour, IProgress
     private int spawnEnemy = 20;
 
     public GameObject enemy1;
-    private int spawnEnemy1 = 5;
+    private int spawnEnemy1 = 10;
 
     public Transform pointA, pointB;
 
@@ -32,7 +32,7 @@ public class Progress2 : MonoBehaviour, IProgress
         if (spawnCoroutine == null)
             spawnCoroutine = StartCoroutine(SpawnWave());
     }
-    //>= 20s
+    //>= 30s
     private IEnumerator SpawnWave()
     {
         float x = pointA.position.x;
@@ -40,9 +40,11 @@ public class Progress2 : MonoBehaviour, IProgress
         float yMax = pointB.position.y;
         while (spawnIndex < spawnEnemy || spawnIndex1 < spawnEnemy1)
         {
-            // ⭐ Spawn 1 enemy1
+            // ⭐ Spawn 2 enemy1
             if (spawnIndex1 < spawnEnemy1)
             {
+                Spawn(enemy1, x, yMin, yMax);
+                spawnIndex1++;
                 Spawn(enemy1, x, yMin, yMax);
                 spawnIndex1++;
             }
@@ -55,7 +57,7 @@ public class Progress2 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(3f);
         }
         spawnCoroutine = null;
     }

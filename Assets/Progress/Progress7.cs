@@ -10,10 +10,10 @@ public class Progress7 : MonoBehaviour, IProgress
     private int spawnEnemy = 45;
 
     public GameObject enemy1;
-    private int spawnEnemy1 = 22;
+    private int spawnEnemy1 = 16;
 
     public GameObject enemy2;
-    private int spawnEnemy2 = 12;
+    private int spawnEnemy2 = 10;
 
     public GameObject boss;
     private int spawnBoss = 2;
@@ -51,8 +51,7 @@ public class Progress7 : MonoBehaviour, IProgress
         float yMin = pointA.position.y;
         float yMax = pointB.position.y;
 
-        // Phase 1 – spam quân ồ ạt (20s) // 45
-        for (int i = 0; i < 9; i++) 
+        for (int i = 0; i < 12; i++)
         {
             for (int j = 0; j < 5 && spawnIndex < spawnEnemy; j++)
             {
@@ -60,46 +59,67 @@ public class Progress7 : MonoBehaviour, IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(2.2f);
-        }
-
-        for (int i = 0; i < 11; i++) //44 + 1 boss
-        {
-            if (spawnIndex1 < spawnEnemy1)
+            if (i % 3 == 0 && spawnIndex1 < spawnEnemy1)
             {
                 Spawn(enemy1, x, yMin, yMax);
-                Spawn(enemy1, x, yMin, yMax);
-                spawnIndex1 += 2;
+                spawnIndex1++;
+            }
+
+            yield return new WaitForSeconds(1.5f);
+        }
+
+        if (spawnIndexBoss < spawnBoss)
+        {
+            Spawn(boss, x, yMin, yMax);
+            spawnIndexBoss++;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 3 && spawnIndex < spawnEnemy; j++)
+            {
+                Spawn(enemy, x, yMin, yMax);
+                spawnIndex++;
             }
 
             if (spawnIndex2 < spawnEnemy2)
             {
                 Spawn(enemy2, x, yMin, yMax);
-                Spawn(enemy2, x, yMin, yMax);
-                spawnIndex2 += 2;
+                spawnIndex2++;
             }
 
-            // Boss 1 xuất hiện ở lượt thứ 4
-            if (i == 3 && spawnIndexBoss < spawnBoss)
-            {
-                while (ManagerGame.Instance.aliveEnemies.Count > 0)
-                    yield return null;
-
-                Spawn(boss, x, 0f, 0f);
-                spawnIndexBoss++;
-            }
-
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
         }
 
-        // Phase 3 – boss cuối kết liễu
-        while (ManagerGame.Instance.aliveEnemies.Count > 0)
-            yield return null;
+        yield return new WaitForSeconds(3f);
 
-        if (spawnIndexBoss < spawnBoss)
+        for (int i = 0; i < 2 && spawnIndexBoss < spawnBoss; i++)
         {
-            Spawn(boss, x, 0f, 0f);
+            Spawn(boss, x, yMin, yMax);
             spawnIndexBoss++;
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 4 && spawnIndex < spawnEnemy; j++)
+            {
+                Spawn(enemy, x, yMin, yMax);
+                spawnIndex++;
+            }
+
+            for (int j = 0; j < 2 && spawnIndex1 < spawnEnemy1; j++)
+            {
+                Spawn(enemy1, x, yMin, yMax);
+                spawnIndex1++;
+            }
+
+            if (spawnIndex2 < spawnEnemy2)
+            {
+                Spawn(enemy2, x, yMin, yMax);
+                spawnIndex2++;
+            }
+
+            yield return new WaitForSeconds(2.5f);
         }
 
         spawnCoroutine = null;

@@ -63,8 +63,15 @@ public class Progress5 : MonoBehaviour,  IProgress
                 spawnIndex++;
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
         }
+
+        if (spawnIndexBoss < spawnBoss)
+        {
+            Spawn(boss, x, yMin, yMax);
+            spawnIndexBoss++;
+        }
+        yield return new WaitForSeconds(3f);
 
         // enemy1 và enemy2 xuất hiện (24s) //20
         for (int i = 0; i < 5; i++)
@@ -85,15 +92,6 @@ public class Progress5 : MonoBehaviour,  IProgress
             }
 
             yield return new WaitForSeconds(3f);
-        }
-        while (ManagerGame.Instance.aliveEnemies.Count > 0)
-            yield return null;
-
-        //Boss xuất hiện
-        if (spawnIndexBoss < spawnBoss)
-        {
-            Spawn(boss, x, yMin, yMax);
-            spawnIndexBoss++;
         }
 
         spawnCoroutine = null;
