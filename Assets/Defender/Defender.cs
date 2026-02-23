@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Defender : MonoBehaviour
 {
@@ -27,7 +25,7 @@ public class Defender : MonoBehaviour
     }
     public void Fire()
     {
-            animator.Play(KeyAnimator.attack);
+            animator.SetTrigger(KeyAnimator.attack);
         AudioManager.Instance.PlayShoot();
         GameObject b = Instantiate(ball, power.position, power.rotation);
         Power p = b.GetComponent<Power>();

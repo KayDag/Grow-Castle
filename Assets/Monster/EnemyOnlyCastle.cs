@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class EnemyOnlyCastle : Enemy
@@ -19,8 +18,6 @@ public class EnemyOnlyCastle : Enemy
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        timer = cooldown;
-
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = true;

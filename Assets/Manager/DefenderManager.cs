@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -119,7 +118,7 @@ public class DefenderManager : MonoBehaviour
 
     public void UseBooster()
     {
-        if (!isBooster) return;
+        if (!isBooster || isUseBooster) return;
 
         AudioManager.Instance.PlayUseBooster();
         if (vfxUseBooster != null)
@@ -128,7 +127,17 @@ public class DefenderManager : MonoBehaviour
         }
 
         isUseBooster = true;
+        isBooster = false;
         timerBooster = 0f;
+        boosterFireTimer = 0f;
+    }
+
+    public void ResetBooster()
+    {
+        isUseBooster = false;
+        isBooster = true;       // cho dùng lại booster
+        timerBooster = 0f;
+        timerCooldown = cooldown;
         boosterFireTimer = 0f;
     }
 

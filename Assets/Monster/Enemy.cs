@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
@@ -11,7 +10,7 @@ public class Enemy : MonoBehaviour
     public float cooldown = 3f;
     public int goldDrop = 5;
 
-    protected float timer = 0;
+    protected float timer;
     protected bool isAttackingCastle;
     protected bool isAttackingAttacker;
 
@@ -45,13 +44,17 @@ public class Enemy : MonoBehaviour
 
     protected void HandleAttack()
     {
-        if (!isAttackingCastle && !isAttackingAttacker) return;
-
+        if (!isAttackingCastle && !isAttackingAttacker)
+        {
+            timer = 0;
+            return;
+        }
         timer += Time.deltaTime;
+
         if (timer >= cooldown)
         {
             Attack();
-            timer = 0f;
+            timer = 0;
         }
     }
 
@@ -73,7 +76,6 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        timer = cooldown;
         if (other.CompareTag("Castle"))
         {
             isAttackingCastle = true;

@@ -895,10 +895,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6db3d9d53e3dd64082657b0cc42a723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 15
-  health: 260
+  damage: 50
+  health: 300
   speedMove: 1.2
-  cooldown: 3
+  cooldown: 2.5
   goldDrop: 20
   vfxDie: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
 --- !u!1 &8720533764174087087

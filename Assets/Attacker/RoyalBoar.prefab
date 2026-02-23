@@ -427,12 +427,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f2ec24fc75cf754eb4233efc5ad9e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
-  baseDamage: 5
-  health: 140
-  baseHealth: 140
-  speed: 1
-  baseSpeed: 1
+  damage: 20
+  baseDamage: 20
+  health: 250
+  baseHealth: 250
+  speed: 0.8
+  baseSpeed: 0.8
   cooldown: 2
   vfxReachCheckPoint: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
 --- !u!50 &5693589300457908953

@@ -187,6 +187,7 @@ public class ManagerGame : MonoBehaviour
         Castle.Instance.health = Castle.Instance.stayHealth;
         AttackerManager.Instance.ResetScouts();
         waves[currentWave].ResetWave();
+        DefenderManager.Instance.ResetBooster();
 
         isGame = false;
         isWaveStarted = false;

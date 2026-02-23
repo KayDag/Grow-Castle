@@ -1,7 +1,5 @@
-﻿using DG.Tweening;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Attacker : MonoBehaviour
@@ -50,6 +48,7 @@ public class Attacker : MonoBehaviour
             isAttacking = false;
             animator.SetBool(KeyAnimator.attacking, false);
             Move();
+            timer = 0;
         }
     }
 
@@ -117,7 +116,6 @@ public class Attacker : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (reachedCheckpoint) return;
-        timer = cooldown;
         if (other.CompareTag("Monster"))
         {
             isAttacking = true;
@@ -137,6 +135,7 @@ public class Attacker : MonoBehaviour
             isAttacking = false;
             enemy = null;
             animator.SetBool(KeyAnimator.attacking, false);
+            timer = cooldown;
         }
     }
     void ReachCheckpoint()

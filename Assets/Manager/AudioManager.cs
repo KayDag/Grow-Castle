@@ -10,8 +10,8 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
     public AudioSource musicSource;
 
-    public float maxMusicVolume = 0.2f;
-    public float maxSfxVolume = 0.5f;
+    public float maxMusicVolume = 0.4f;
+    public float maxSfxVolume = 0.7f;
     public float musicVolume = 1f; 
     public float sfxVolume = 1f;
 

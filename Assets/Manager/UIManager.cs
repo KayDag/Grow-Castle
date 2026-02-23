@@ -62,6 +62,9 @@ public class UIManager : MonoBehaviour
     private bool canBackHomeLose = false;
     private bool canReward = false;
 
+    public Image imageButtonComplete;
+    public Color buttonComplete;
+
     private void Awake()
     {
         if (Instance == null)
@@ -150,10 +153,24 @@ public class UIManager : MonoBehaviour
 
     public void Buy()
     {
-        goldAttacker.text = (AttackerManager.Instance.baseGold + 
+        if (AttackerManager.Instance.FullAttacker())
+        {
+            goldAttacker.text = "--";
+        }
+        else
+        {
+            goldAttacker.text = (AttackerManager.Instance.baseGold +
             ((int)ManagerGame.Instance.stats.attacker - 1) * 5).ToString();
-        goldDefender.text = (DefenderManager.Instance.baseGold +
+        }
+        if (DefenderManager.Instance.FullDefender())
+        {
+            goldDefender.text = "--";
+        }
+        else
+        {
+            goldDefender.text = (DefenderManager.Instance.baseGold +
             ((int)ManagerGame.Instance.stats.defender - 1) * 10).ToString();
+        }
     }
     //scouts
     public void Scouts()
@@ -289,8 +306,18 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1;
         pauseCanvas.gameObject.SetActive(false);
+
         ManagerGame.Instance.ResetCurrentWave();
-        BackHome();
+
+        homeCanvas.gameObject.SetActive(true);
+        defaultCanvas.gameObject.SetActive(true);
+        gameCanvas.gameObject.SetActive(false);
+
+        Progress();
+        Buy();
+        Scouts();
+        CheckPointNextWave();
+
         AudioManager.Instance.PlayClick();
     }
     //Resume Game
@@ -311,6 +338,7 @@ public class UIManager : MonoBehaviour
 
         gameCanvas.gameObject.SetActive(true);
         ManagerGame.Instance.isGame = true;
+        ManagerGame.Instance.waitingForPlayer = false;
     }
     //Lose Game
     public void LoseGame()
@@ -325,7 +353,7 @@ public class UIManager : MonoBehaviour
     }
     private IEnumerator DelayBackHomeLose()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSecondsRealtime(3f);
         canBackHomeLose = true;
     }
     //Back Game when lose
@@ -347,6 +375,7 @@ public class UIManager : MonoBehaviour
         AttackerManager.Instance.NewWave();
         CheckPointNextWave();
         ManagerGame.Instance.UpdateData();
+        score = 0;
     }
 
     //Win game
@@ -375,7 +404,7 @@ public class UIManager : MonoBehaviour
     }
     private IEnumerator DelayReward()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSecondsRealtime(3f);
         canReward = true;
     }
     //reward
@@ -391,7 +420,13 @@ public class UIManager : MonoBehaviour
     {
         previewStats = ManagerGame.Instance.stats.Clone();
         int wave = ManagerGame.Instance.currentWave;
-        score = ManagerGame.Instance.scoreAdd[wave - 1];
+        if (wave - 1 >= 0 && wave - 1 < ManagerGame.Instance.scoreAdd.Count)
+        {
+            score = ManagerGame.Instance.scoreAdd[wave - 1];
+            ChangeColorButtonComplete(score);
+        }
+        else
+            score = 0;
         UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
     }
 
@@ -404,6 +439,7 @@ public class UIManager : MonoBehaviour
             previewStats.castle++;
             score--;
             UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
+            ChangeColorButtonComplete(score);
         }
     }
     //Add Speed Attacker
@@ -415,6 +451,7 @@ public class UIManager : MonoBehaviour
             previewStats.attacker++;
             score--;
             UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
+            ChangeColorButtonComplete(score);
         }
     }
     //Add Damage Defender
@@ -426,6 +463,7 @@ public class UIManager : MonoBehaviour
             previewStats.defender++;
             score--;
             UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
+            ChangeColorButtonComplete(score);
         }
     }
     //Add cooldown booster
@@ -437,6 +475,20 @@ public class UIManager : MonoBehaviour
             previewStats.booster++;
             score--;
             UpdateUI(hpU, speedU, damageU, cooldownBoosterU);
+            ChangeColorButtonComplete(score);
+        }
+    }
+    public void ChangeColorButtonComplete(int a) 
+    {
+        if (a > 0)
+        {
+            UnityEngine.ColorUtility.TryParseHtmlString("#FFFFFF", out buttonComplete);
+            imageButtonComplete.color = buttonComplete;
+        }
+        else if (a == 0)
+        {
+            UnityEngine.ColorUtility.TryParseHtmlString("#00E8FF", out buttonComplete);
+            imageButtonComplete.color = buttonComplete;
         }
     }
     //Complete
@@ -459,6 +511,7 @@ public class UIManager : MonoBehaviour
     {
         AudioManager.Instance.PlayClick();
         OpenUpdateStats();
+        ChangeColorButtonComplete(score);
     }
     private void UpdateUI(TextMeshProUGUI hpU, TextMeshProUGUI speedU, TextMeshProUGUI damageU, TextMeshProUGUI cooldownBoosterU)
     {
